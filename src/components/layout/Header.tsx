@@ -43,6 +43,13 @@ export const Header: React.FC<HeaderProps> = ({ sidebarCollapsed = false }) => {
 
   // Focus areas mapping - using the same values as onboarding
   const focusAreas = {
+    'explore': {
+      title: 'Exploring',
+      description: 'Discover new opportunities and trends',
+      path: '/',
+      color: 'from-green-500 to-emerald-600',
+      icon: '🔍'
+    },
     'ai-automation': {
       title: 'N8n Agents',
       description: 'Build automated workflows and AI agents',
@@ -64,13 +71,7 @@ export const Header: React.FC<HeaderProps> = ({ sidebarCollapsed = false }) => {
       color: 'from-red-500 to-pink-600',
       icon: '🎬'
     },
-    'explore': {
-      title: 'Exploring',
-      description: 'Discover new opportunities and trends',
-      path: '/',
-      color: 'from-green-500 to-emerald-600',
-      icon: '🔍'
-    },
+
     'advanced': {
       title: 'Advanced',
       description: 'Access all tools and features',
