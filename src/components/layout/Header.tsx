@@ -16,7 +16,7 @@ interface UserData {
   avatar: string;
   progress: number;
   plan: string;
-  focus: 'ai-automation' | 'web-dev' | 'ai-video' | 'explore' | 'advanced';
+  focus: 'explore' | 'ai-automation' | 'web-dev' | 'ai-video' | 'advanced';
 }
 
 export const Header: React.FC<HeaderProps> = ({ sidebarCollapsed = false }) => {
