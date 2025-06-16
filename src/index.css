@@ -1,0 +1,111 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --primary-bg: #ffffff;
+  --secondary-bg: #f5f5f5;
+  --text-color: #333333;
+  --accent-color: #2979ff;
+  --border-color: #e5e7eb;
+  --card-bg: #ffffff;
+  --hover-bg: #f3f4f6;
+  --input-bg: #f9fafb;
+}
+
+:root.dark {
+  --primary-bg: #1a1a1a;
+  --secondary-bg: #2d2d2d;
+  --text-color: #ffffff;
+  --accent-color: #4a90e2;
+  --border-color: #374151;
+  --card-bg: #2d2d2d;
+  --hover-bg: #374151;
+  --input-bg: #374151;
+}
+
+:root.gradient {
+  --primary-bg: var(--gradient-bg, linear-gradient(to bottom right, rgb(29 78 216), rgb(220 38 38)));
+  --secondary-bg: #2d2d2d;
+  --text-color: #ffffff;
+  --accent-color: #6200ee;
+  --border-color: #374151;
+  --card-bg: rgba(45, 45, 45, 0.8);
+  --hover-bg: rgba(55, 65, 81, 0.8);
+  --input-bg: rgba(55, 65, 81, 0.8);
+}
+
+/* UI Density classes */
+:root.ui-comfortable {
+  font-size: 100%;
+}
+
+:root.ui-compact {
+  font-size: 75%;
+}
+
+/* Adjust spacing for compact mode */
+.ui-compact .p-4 {
+  padding: 0.75rem;
+}
+
+.ui-compact .p-6 {
+  padding: 1rem;
+}
+
+.ui-compact .gap-6 {
+  gap: 1rem;
+}
+
+.ui-compact .space-y-6 > :not([hidden]) ~ :not([hidden]) {
+  --tw-space-y-reverse: 0;
+  margin-top: calc(1rem * calc(1 - var(--tw-space-y-reverse)));
+  margin-bottom: calc(1rem * var(--tw-space-y-reverse));
+}
+
+/* Ensure text remains readable in compact mode */
+.ui-compact h1 {
+  font-size: 1.875rem; /* Slightly larger than default scaled size */
+}
+
+.ui-compact h2 {
+  font-size: 1.5rem;
+}
+
+.ui-compact h3 {
+  font-size: 1.25rem;
+}
+
+.ui-compact p, .ui-compact span, .ui-compact div {
+  line-height: 1.5;
+}
+
+body {
+  background-color: var(--primary-bg);
+  color: var(--text-color);
+}
+
+.card {
+  background-color: var(--card-bg);
+  border-color: var(--border-color);
+}
+
+.input {
+  background-color: var(--input-bg);
+  border-color: var(--border-color);
+  color: var(--text-color);
+}
+
+.button {
+  background-color: var(--accent-color);
+  color: white;
+}
+
+.button-outline {
+  border-color: var(--border-color);
+  color: var(--text-color);
+}
+
+.button-ghost:hover {
+  background-color: var(--hover-bg);
+}
