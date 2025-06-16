@@ -46,7 +46,7 @@ export const Header: React.FC<HeaderProps> = ({ sidebarCollapsed = false }) => {
     'explore': {
       title: 'Exploring',
       description: 'Discover new opportunities and trends',
-      path: '/',
+      path: '//',
       color: 'from-green-500 to-emerald-600',
       icon: '🔍'
     },
