@@ -2,6 +2,11 @@ import React, { useState } from 'react';
 import { useTheme } from '../../components/ui/ThemeProvider';
 import { Card } from '../../components/ui/Card';
 import { Button } from '../../components/ui/Button';
+import { GuideOverlay } from '../../components/shared/GuideOverlay';
+import { ClickableCard } from '../../components/shared/ClickableCard';
+import BrandSetup from './tabs/BrandSetup';
+import EmailSms from './tabs/EmailSms';
+import AiVideoAds from './tabs/AiVideoAds';
 import { 
   Shirt, 
   Mail, 
@@ -18,12 +23,15 @@ import {
   Instagram,
   Youtube,
   Palette,
-  Truck
+  Truck,
+  Package,
+  Star
 } from 'lucide-react';
 
 const ClothingBrand: React.FC = () => {
   const { theme } = useTheme();
   const [activeTab, setActiveTab] = useState('brand-setup');
+  const [activeOverlay, setActiveOverlay] = useState<string | null>(null);
 
   const tabs = [
     { id: 'brand-setup', label: 'Brand Setup & Identity', icon: <Palette className="h-4 w-4" /> },
@@ -42,9 +50,9 @@ const ClothingBrand: React.FC = () => {
       case 'ai-video-ads':
         return <AiVideoAdsContent />;
       case 'ai-influencers':
-        return <AiInfluencersContent />;
+        return <AiInfluencersContent activeOverlay={activeOverlay} setActiveOverlay={setActiveOverlay} />;
       case 'scaling':
-        return <ScalingContent />;
+        return <ScalingContent activeOverlay={activeOverlay} setActiveOverlay={setActiveOverlay} />;
       default:
         return <BrandSetupContent />;
     }
@@ -179,459 +187,595 @@ const ClothingBrand: React.FC = () => {
 
 // Tab Content Components
 const BrandSetupContent: React.FC = () => {
-  const { theme } = useTheme();
-  
-  return (
-    <div className="space-y-6">
-      <h2 className={`text-xl font-bold ${
-        theme === 'gradient' ? 'text-white' : 'text-gray-900 dark:text-white'
-      }`}>
-        Brand Setup & Identity
-      </h2>
-      
-      <p className={`${
-        theme === 'gradient' ? 'text-gray-300' : 'text-gray-600 dark:text-gray-300'
-      }`}>
-        Create a compelling brand identity that resonates with your target audience and stands out in the market.
-      </p>
-      
-      <div className="space-y-4">
-        {[
-          {
-            title: "Market Research & Niche Selection",
-            description: "Identify profitable clothing niches with high demand and low competition",
-            steps: [
-              "Use AI tools to analyze market trends and competition",
-              "Identify underserved sub-niches with passionate audiences",
-              "Validate demand through social media engagement analysis"
-            ]
-          },
-          {
-            title: "Brand Identity Development",
-            description: "Create a distinctive brand identity that resonates with your target audience",
-            steps: [
-              "Generate brand name options using AI naming tools",
-              "Create professional logo and visual identity with AI design tools",
-              "Develop brand voice, mission, and unique selling proposition"
-            ]
-          },
-          {
-            title: "Product Selection & Sourcing",
-            description: "Select and source high-quality products with optimal profit margins",
-            steps: [
-              "Identify print-on-demand vs. inventory-based product strategy",
-              "Establish relationships with reliable suppliers and manufacturers",
-              "Set up quality control processes and sample ordering system"
-            ]
-          },
-          {
-            title: "E-commerce Store Setup",
-            description: "Build a high-converting online store optimized for sales",
-            steps: [
-              "Select and configure the optimal e-commerce platform (Shopify recommended)",
-              "Implement high-converting product page templates",
-              "Set up payment processing, shipping, and tax configurations"
-            ]
-          }
-        ].map((section, index) => (
-          <Card key={index} className={theme === 'gradient' ? 'bg-gray-800/50' : ''}>
-            <h3 className={`text-lg font-semibold mb-2 ${
-              theme === 'gradient' ? 'text-white' : 'text-gray-900 dark:text-white'
-            }`}>
-              {section.title}
-            </h3>
-            <p className={`text-sm mb-4 ${
-              theme === 'gradient' ? 'text-gray-300' : 'text-gray-600 dark:text-gray-300'
-            }`}>
-              {section.description}
-            </p>
-            <div className="space-y-2">
-              {section.steps.map((step, stepIndex) => (
-                <div key={stepIndex} className="flex items-start">
-                  <CheckCircle className="h-5 w-5 text-green-500 mr-2 flex-shrink-0 mt-0.5" />
-                  <span className={`text-sm ${
-                    theme === 'gradient' ? 'text-gray-300' : 'text-gray-600 dark:text-gray-300'
-                  }`}>
-                    {step}
-                  </span>
-                </div>
-              ))}
-            </div>
-          </Card>
-        ))}
-      </div>
-      
-      <div className="flex justify-end">
-        <Button onClick={() => {}}>
-          Download Brand Setup Checklist
-        </Button>
-      </div>
-    </div>
-  );
+  return <BrandSetup />;
 };
 
 const EmailSmsContent: React.FC = () => {
-  const { theme } = useTheme();
-  
-  return (
-    <div className="space-y-6">
-      <h2 className={`text-xl font-bold ${
-        theme === 'gradient' ? 'text-white' : 'text-gray-900 dark:text-white'
-      }`}>
-        Email/SMS Automation
-      </h2>
-      
-      <p className={`${
-        theme === 'gradient' ? 'text-gray-300' : 'text-gray-600 dark:text-gray-300'
-      }`}>
-        Build powerful automated marketing systems that drive sales on autopilot through email and SMS.
-      </p>
-      
-      <div className="space-y-4">
-        {[
-          {
-            title: "Email Marketing Infrastructure",
-            description: "Set up a robust email marketing system for your clothing brand",
-            steps: [
-              "Select and configure an email service provider (Klaviyo recommended)",
-              "Set up domain authentication and deliverability optimization",
-              "Create segmented lists for targeted marketing"
-            ]
-          },
-          {
-            title: "Automated Email Sequences",
-            description: "Create high-converting email sequences that drive sales automatically",
-            steps: [
-              "Welcome sequence for new subscribers (7-email series)",
-              "Abandoned cart recovery sequence (3-5 emails)",
-              "Post-purchase sequence for reviews and upsells"
-            ]
-          },
-          {
-            title: "SMS Marketing Integration",
-            description: "Implement SMS marketing for higher open rates and conversions",
-            steps: [
-              "Set up compliant SMS opt-in processes",
-              "Create automated SMS flows for cart abandonment and promotions",
-              "Implement SMS for shipping and delivery notifications"
-            ]
-          },
-          {
-            title: "AI-Powered Content Creation",
-            description: "Use AI to generate engaging email and SMS content at scale",
-            steps: [
-              "Set up AI tools for generating email subject lines and content",
-              "Create templates for consistent brand messaging",
-              "Implement A/B testing systems for continuous optimization"
-            ]
-          }
-        ].map((section, index) => (
-          <Card key={index} className={theme === 'gradient' ? 'bg-gray-800/50' : ''}>
-            <h3 className={`text-lg font-semibold mb-2 ${
-              theme === 'gradient' ? 'text-white' : 'text-gray-900 dark:text-white'
-            }`}>
-              {section.title}
-            </h3>
-            <p className={`text-sm mb-4 ${
-              theme === 'gradient' ? 'text-gray-300' : 'text-gray-600 dark:text-gray-300'
-            }`}>
-              {section.description}
-            </p>
-            <div className="space-y-2">
-              {section.steps.map((step, stepIndex) => (
-                <div key={stepIndex} className="flex items-start">
-                  <CheckCircle className="h-5 w-5 text-green-500 mr-2 flex-shrink-0 mt-0.5" />
-                  <span className={`text-sm ${
-                    theme === 'gradient' ? 'text-gray-300' : 'text-gray-600 dark:text-gray-300'
-                  }`}>
-                    {step}
-                  </span>
-                </div>
-              ))}
-            </div>
-          </Card>
-        ))}
-      </div>
-      
-      <div className="flex justify-end">
-        <Button onClick={() => {}}>
-          Download Email/SMS Templates
-        </Button>
-      </div>
-    </div>
-  );
+  return <EmailSms />;
 };
 
 const AiVideoAdsContent: React.FC = () => {
-  const { theme } = useTheme();
-  
-  return (
-    <div className="space-y-6">
-      <h2 className={`text-xl font-bold ${
-        theme === 'gradient' ? 'text-white' : 'text-gray-900 dark:text-white'
-      }`}>
-        AI Video Ads
-      </h2>
-      
-      <p className={`${
-        theme === 'gradient' ? 'text-gray-300' : 'text-gray-600 dark:text-gray-300'
-      }`}>
-        Create high-converting video advertisements for your clothing brand using AI tools.
-      </p>
-      
-      <div className="space-y-4">
-        {[
-          {
-            title: "AI Video Creation Tools",
-            description: "Master the essential AI tools for creating professional video ads",
-            steps: [
-              "Set up accounts on key AI video platforms (Runway, Pika, Midjourney)",
-              "Learn prompt engineering specific to fashion and apparel",
-              "Create templates for consistent brand video production"
-            ]
-          },
-          {
-            title: "High-Converting Ad Formats",
-            description: "Implement proven video ad formats that drive clothing sales",
-            steps: [
-              "Product showcase videos with lifestyle context",
-              "Before/after transformation videos",
-              "User-generated content style videos for authenticity"
-            ]
-          },
-          {
-            title: "Platform-Specific Optimization",
-            description: "Tailor your video ads for maximum performance on each platform",
-            steps: [
-              "Instagram/Facebook video ad specifications and best practices",
-              "TikTok-optimized vertical video formats",
-              "YouTube ad formats for different funnel stages"
-            ]
-          },
-          {
-            title: "Testing & Scaling Framework",
-            description: "Implement a systematic approach to testing and scaling winning ads",
-            steps: [
-              "Create a structured testing framework for ad variations",
-              "Set up performance tracking and analytics",
-              "Develop a scaling protocol for winning ad creative"
-            ]
-          }
-        ].map((section, index) => (
-          <Card key={index} className={theme === 'gradient' ? 'bg-gray-800/50' : ''}>
-            <h3 className={`text-lg font-semibold mb-2 ${
-              theme === 'gradient' ? 'text-white' : 'text-gray-900 dark:text-white'
-            }`}>
-              {section.title}
-            </h3>
-            <p className={`text-sm mb-4 ${
-              theme === 'gradient' ? 'text-gray-300' : 'text-gray-600 dark:text-gray-300'
-            }`}>
-              {section.description}
-            </p>
-            <div className="space-y-2">
-              {section.steps.map((step, stepIndex) => (
-                <div key={stepIndex} className="flex items-start">
-                  <CheckCircle className="h-5 w-5 text-green-500 mr-2 flex-shrink-0 mt-0.5" />
-                  <span className={`text-sm ${
-                    theme === 'gradient' ? 'text-gray-300' : 'text-gray-600 dark:text-gray-300'
-                  }`}>
-                    {step}
-                  </span>
-                </div>
-              ))}
-            </div>
-          </Card>
-        ))}
-      </div>
-      
-      <div className="flex justify-end">
-        <Button onClick={() => {}}>
-          Download Video Ad Templates
-        </Button>
-      </div>
-    </div>
-  );
+  return <AiVideoAds />;
 };
 
-const AiInfluencersContent: React.FC = () => {
+const AiInfluencersContent: React.FC<{ activeOverlay: string | null; setActiveOverlay: React.Dispatch<React.SetStateAction<string | null>> }> = ({ activeOverlay, setActiveOverlay }) => {
   const { theme } = useTheme();
+  
+  const influencerSections = [
+    {
+      id: 'ai-creation',
+      title: 'AI Influencer Creation',
+      description: 'Build your own AI influencers to promote your clothing brand',
+      icon: <Users className="h-6 w-6" />,
+      color: 'purple' as const,
+      overlayContent: {
+        title: 'AI Influencer Creation Guide',
+        description: 'Learn how to create compelling AI influencers for your clothing brand',
+        sections: [
+          {
+            title: 'AI Personality Development',
+            color: 'purple' as const,
+            content: (
+              <div className="space-y-4">
+                <p className={`${theme === 'gradient' ? 'text-gray-300' : 'text-gray-600 dark:text-gray-300'}`}>
+                  Create authentic AI personalities that resonate with your target audience and align with your brand values.
+                </p>
+                <h4 className={`font-semibold ${theme === 'gradient' ? 'text-white' : 'text-gray-900 dark:text-white'}`}>Key Development Areas:</h4>
+                <ul className={`list-disc pl-6 space-y-2 ${theme === 'gradient' ? 'text-gray-300' : 'text-gray-600 dark:text-gray-300'}`}>
+                  <li>Define personality traits and characteristics</li>
+                  <li>Create a compelling backstory and lifestyle</li>
+                  <li>Develop unique voice and communication style</li>
+                  <li>Establish visual consistency and style preferences</li>
+                </ul>
+                <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mt-6">
+                  <ClickableCard onClick={() => {}}>
+                    <div className="p-4 text-center">
+                      <Target className={`h-8 w-8 mx-auto mb-3 ${theme === 'gradient' ? 'text-purple-400' : 'text-purple-600'}`} />
+                      <h4 className={`font-semibold mb-2 ${theme === 'gradient' ? 'text-white' : 'text-gray-900 dark:text-white'}`}>
+                        Personality Design
+                      </h4>
+                      <p className={`text-sm ${theme === 'gradient' ? 'text-gray-300' : 'text-gray-600 dark:text-gray-300'}`}>
+                        Create unique personality traits
+                      </p>
+                    </div>
+                  </ClickableCard>
+                  <ClickableCard onClick={() => {}}>
+                    <div className="p-4 text-center">
+                      <Palette className={`h-8 w-8 mx-auto mb-3 ${theme === 'gradient' ? 'text-pink-400' : 'text-pink-600'}`} />
+                      <h4 className={`font-semibold mb-2 ${theme === 'gradient' ? 'text-white' : 'text-gray-900 dark:text-white'}`}>
+                        Visual Identity
+                      </h4>
+                      <p className={`text-sm ${theme === 'gradient' ? 'text-gray-300' : 'text-gray-600 dark:text-gray-300'}`}>
+                        Design consistent appearance
+                      </p>
+                    </div>
+                  </ClickableCard>
+                  <ClickableCard onClick={() => {}}>
+                    <div className="p-4 text-center">
+                      <MessageSquare className={`h-8 w-8 mx-auto mb-3 ${theme === 'gradient' ? 'text-blue-400' : 'text-blue-600'}`} />
+                      <h4 className={`font-semibold mb-2 ${theme === 'gradient' ? 'text-white' : 'text-gray-900 dark:text-white'}`}>
+                        Voice & Tone
+                      </h4>
+                      <p className={`text-sm ${theme === 'gradient' ? 'text-gray-300' : 'text-gray-600 dark:text-gray-300'}`}>
+                        Develop communication style
+                      </p>
+                    </div>
+                  </ClickableCard>
+                </div>
+              </div>
+            ),
+            resources: [
+              { title: 'AI Character Development Guide', url: '#' },
+              { title: 'Personality Framework Template', url: '#' }
+            ],
+            checklist: [
+              'Define core personality traits',
+              'Create detailed backstory',
+              'Establish visual style guide',
+              'Develop voice and tone guidelines'
+            ]
+          }
+        ]
+      }
+    },
+    {
+      id: 'content-strategy',
+      title: 'Content Strategy & Calendar',
+      description: 'Develop a comprehensive content strategy for your AI influencers',
+      icon: <Instagram className="h-6 w-6" />,
+      color: 'orange' as const,
+      overlayContent: {
+        title: 'Content Strategy Guide',
+        description: 'Create a systematic approach to content creation and scheduling',
+        sections: [
+          {
+            title: 'Content Planning System',
+            color: 'orange' as const,
+            content: (
+              <div className="space-y-4">
+                <p className={`${theme === 'gradient' ? 'text-gray-300' : 'text-gray-600 dark:text-gray-300'}`}>
+                  Build a systematic content creation and scheduling process that maintains consistency and engagement.
+                </p>
+                <h4 className={`font-semibold ${theme === 'gradient' ? 'text-white' : 'text-gray-900 dark:text-white'}`}>Content Framework:</h4>
+                <ul className={`list-disc pl-6 space-y-2 ${theme === 'gradient' ? 'text-gray-300' : 'text-gray-600 dark:text-gray-300'}`}>
+                  <li>Platform-specific content optimization</li>
+                  <li>Seasonal and trending topic integration</li>
+                  <li>Product showcase and lifestyle content balance</li>
+                  <li>Community engagement and interaction posts</li>
+                </ul>
+                <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mt-6">
+                  <ClickableCard onClick={() => {}}>
+                    <div className="p-4 text-center">
+                      <Youtube className={`h-8 w-8 mx-auto mb-3 ${theme === 'gradient' ? 'text-red-400' : 'text-red-600'}`} />
+                      <h4 className={`font-semibold mb-2 ${theme === 'gradient' ? 'text-white' : 'text-gray-900 dark:text-white'}`}>
+                        Video Content
+                      </h4>
+                      <p className={`text-sm ${theme === 'gradient' ? 'text-gray-300' : 'text-gray-600 dark:text-gray-300'}`}>
+                        Reels and video strategy
+                      </p>
+                    </div>
+                  </ClickableCard>
+                  <ClickableCard onClick={() => {}}>
+                    <div className="p-4 text-center">
+                      <Instagram className={`h-8 w-8 mx-auto mb-3 ${theme === 'gradient' ? 'text-pink-400' : 'text-pink-600'}`} />
+                      <h4 className={`font-semibold mb-2 ${theme === 'gradient' ? 'text-white' : 'text-gray-900 dark:text-white'}`}>
+                        Social Posts
+                      </h4>
+                      <p className={`text-sm ${theme === 'gradient' ? 'text-gray-300' : 'text-gray-600 dark:text-gray-300'}`}>
+                        Feed and story content
+                      </p>
+                    </div>
+                  </ClickableCard>
+                  <ClickableCard onClick={() => {}}>
+                    <div className="p-4 text-center">
+                      <TrendingUp className={`h-8 w-8 mx-auto mb-3 ${theme === 'gradient' ? 'text-green-400' : 'text-green-600'}`} />
+                      <h4 className={`font-semibold mb-2 ${theme === 'gradient' ? 'text-white' : 'text-gray-900 dark:text-white'}`}>
+                        Trend Integration
+                      </h4>
+                      <p className={`text-sm ${theme === 'gradient' ? 'text-gray-300' : 'text-gray-600 dark:text-gray-300'}`}>
+                        Leverage trending topics
+                      </p>
+                    </div>
+                  </ClickableCard>
+                </div>
+              </div>
+            ),
+            resources: [
+              { title: 'Content Calendar Template', url: '#' },
+              { title: 'Platform Best Practices Guide', url: '#' }
+            ],
+            checklist: [
+              'Create 30-day content calendar',
+              'Plan platform-specific content',
+              'Set up content creation workflow',
+              'Establish posting schedule'
+            ]
+          }
+        ]
+      }
+    }
+  ];
   
   return (
     <div className="space-y-6">
-      <h2 className={`text-xl font-bold ${
-        theme === 'gradient' ? 'text-white' : 'text-gray-900 dark:text-white'
-      }`}>
+      <h2 className={`text-2xl font-bold ${theme === 'gradient' ? 'text-white' : 'text-gray-900 dark:text-white'}`}>
         AI Influencer Marketing
       </h2>
       
-      <p className={`${
-        theme === 'gradient' ? 'text-gray-300' : 'text-gray-600 dark:text-gray-300'
-      }`}>
+      <p className={`text-lg ${theme === 'gradient' ? 'text-gray-300' : 'text-gray-600 dark:text-gray-300'}`}>
         Leverage AI-powered influencer strategies to amplify your brand reach and credibility.
       </p>
       
-      <div className="space-y-4">
-        {[
-          {
-            title: "AI Influencer Creation",
-            description: "Build your own AI influencers to promote your clothing brand",
-            steps: [
-              "Design compelling AI personalities aligned with your brand",
-              "Create consistent visual identity using AI image generation",
-              "Develop authentic voice and content style for each AI influencer"
-            ]
-          },
-          {
-            title: "Content Strategy & Calendar",
-            description: "Develop a comprehensive content strategy for your AI influencers",
-            steps: [
-              "Create a content calendar with platform-specific posting schedules",
-              "Develop content themes and storylines for authentic engagement",
-              "Implement a content batch creation system for efficiency"
-            ]
-          },
-          {
-            title: "Engagement & Community Building",
-            description: "Build authentic engagement and community around your AI influencers",
-            steps: [
-              "Set up automated engagement protocols for comments and messages",
-              "Create community-building content that encourages interaction",
-              "Implement follower growth strategies specific to each platform"
-            ]
-          },
-          {
-            title: "Monetization & Conversion",
-            description: "Convert influencer audiences into customers and revenue",
-            steps: [
-              "Develop natural product integration strategies for AI influencer content",
-              "Create exclusive offers and promotions for influencer audiences",
-              "Implement tracking systems to measure conversion from each influencer"
-            ]
-          }
-        ].map((section, index) => (
-          <Card key={index} className={theme === 'gradient' ? 'bg-gray-800/50' : ''}>
-            <h3 className={`text-lg font-semibold mb-2 ${
-              theme === 'gradient' ? 'text-white' : 'text-gray-900 dark:text-white'
-            }`}>
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+        {influencerSections.map((section) => (
+          <ClickableCard 
+            key={section.id}
+            onClick={() => setActiveOverlay(section.id)}
+            className={`p-6 border-l-4 border-${section.color}-500 transition-all duration-200 hover:scale-105`}
+          >
+            <div className="flex items-start space-x-4">
+              <div className={`p-3 rounded-lg bg-${section.color}-100 dark:bg-${section.color}-900/30 text-${section.color}-600 dark:text-${section.color}-400`}>
+                {section.icon}
+              </div>
+              <div className="flex-1">
+                <h3 className={`text-lg font-semibold mb-2 ${theme === 'gradient' ? 'text-white' : 'text-gray-900 dark:text-white'}`}>
               {section.title}
             </h3>
-            <p className={`text-sm mb-4 ${
-              theme === 'gradient' ? 'text-gray-300' : 'text-gray-600 dark:text-gray-300'
-            }`}>
+                <p className={`text-sm ${theme === 'gradient' ? 'text-gray-300' : 'text-gray-600 dark:text-gray-300'}`}>
               {section.description}
             </p>
-            <div className="space-y-2">
-              {section.steps.map((step, stepIndex) => (
-                <div key={stepIndex} className="flex items-start">
-                  <CheckCircle className="h-5 w-5 text-green-500 mr-2 flex-shrink-0 mt-0.5" />
-                  <span className={`text-sm ${
-                    theme === 'gradient' ? 'text-gray-300' : 'text-gray-600 dark:text-gray-300'
-                  }`}>
-                    {step}
-                  </span>
+                <div className="mt-3">
+                  <ArrowRight className={`h-4 w-4 text-${section.color}-500`} />
                 </div>
-              ))}
+              </div>
             </div>
-          </Card>
+          </ClickableCard>
         ))}
       </div>
+
+      {/* Guide Overlays */}
+      {influencerSections.map((section) => (
+        <GuideOverlay
+          key={`overlay-${section.id}`}
+          isOpen={activeOverlay === section.id}
+          onClose={() => setActiveOverlay(null)}
+          title={section.overlayContent.title}
+          description={section.overlayContent.description}
+          sections={section.overlayContent.sections}
+        />
+      ))}
       
       <div className="flex justify-end">
-        <Button onClick={() => {}}>
-          Download AI Influencer Playbook
+        <Button onClick={() => setActiveOverlay('ai-creation')}>
+          Start AI Influencer Setup
         </Button>
       </div>
     </div>
   );
 };
 
-const ScalingContent: React.FC = () => {
+const ScalingContent: React.FC<{ activeOverlay: string | null; setActiveOverlay: React.Dispatch<React.SetStateAction<string | null>> }> = ({ activeOverlay, setActiveOverlay }) => {
   const { theme } = useTheme();
   
+  const scalingSections = [
+    {
+      id: 'paid-advertising',
+      title: 'Paid Advertising Scaling System',
+      description: 'Implement a systematic approach to scaling paid advertising',
+      icon: <TrendingUp className="h-6 w-6" />,
+      color: 'green' as const,
+      overlayContent: {
+        title: 'Paid Advertising Scaling Guide',
+        description: 'Master the art of scaling your advertising campaigns profitably',
+        sections: [
+          {
+            title: 'Advanced Scaling Strategies',
+            color: 'green' as const,
+            content: (
+              <div className="space-y-4">
+                <p className={`${theme === 'gradient' ? 'text-gray-300' : 'text-gray-600 dark:text-gray-300'}`}>
+                  Learn proven strategies to scale your advertising campaigns while maintaining profitability and ROAS.
+                </p>
+                <h4 className={`font-semibold ${theme === 'gradient' ? 'text-white' : 'text-gray-900 dark:text-white'}`}>Scaling Framework:</h4>
+                <ul className={`list-disc pl-6 space-y-2 ${theme === 'gradient' ? 'text-gray-300' : 'text-gray-600 dark:text-gray-300'}`}>
+                  <li>Vertical scaling with budget optimization</li>
+                  <li>Horizontal scaling across platforms and audiences</li>
+                  <li>Creative testing and rotation strategies</li>
+                  <li>Advanced attribution and tracking setup</li>
+                </ul>
+                <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mt-6">
+                  <ClickableCard onClick={() => {}}>
+                    <div className="p-4 text-center">
+                      <TrendingUp className={`h-8 w-8 mx-auto mb-3 ${theme === 'gradient' ? 'text-green-400' : 'text-green-600'}`} />
+                      <h4 className={`font-semibold mb-2 ${theme === 'gradient' ? 'text-white' : 'text-gray-900 dark:text-white'}`}>
+                        Vertical Scaling
+                      </h4>
+                      <p className={`text-sm ${theme === 'gradient' ? 'text-gray-300' : 'text-gray-600 dark:text-gray-300'}`}>
+                        Increase ad spend efficiently
+                      </p>
+                    </div>
+                  </ClickableCard>
+                  <ClickableCard onClick={() => {}}>
+                    <div className="p-4 text-center">
+                      <Target className={`h-8 w-8 mx-auto mb-3 ${theme === 'gradient' ? 'text-blue-400' : 'text-blue-600'}`} />
+                      <h4 className={`font-semibold mb-2 ${theme === 'gradient' ? 'text-white' : 'text-gray-900 dark:text-white'}`}>
+                        Audience Expansion
+                      </h4>
+                      <p className={`text-sm ${theme === 'gradient' ? 'text-gray-300' : 'text-gray-600 dark:text-gray-300'}`}>
+                        Reach new customer segments
+                      </p>
+                    </div>
+                  </ClickableCard>
+                  <ClickableCard onClick={() => {}}>
+                    <div className="p-4 text-center">
+                      <Zap className={`h-8 w-8 mx-auto mb-3 ${theme === 'gradient' ? 'text-yellow-400' : 'text-yellow-600'}`} />
+                      <h4 className={`font-semibold mb-2 ${theme === 'gradient' ? 'text-white' : 'text-gray-900 dark:text-white'}`}>
+                        Creative Testing
+                      </h4>
+                      <p className={`text-sm ${theme === 'gradient' ? 'text-gray-300' : 'text-gray-600 dark:text-gray-300'}`}>
+                        Optimize ad performance
+                      </p>
+                    </div>
+                  </ClickableCard>
+                </div>
+              </div>
+            ),
+            resources: [
+              { title: 'Scaling Playbook Template', url: '#' },
+              { title: 'ROAS Calculator Tool', url: '#' }
+            ],
+            checklist: [
+              'Set up proper attribution tracking',
+              'Implement vertical scaling strategy',
+              'Create horizontal expansion plan',
+              'Establish creative testing workflow'
+            ]
+          }
+        ]
+      }
+    },
+    {
+      id: 'product-expansion',
+      title: 'Product Line Expansion',
+      description: 'Strategically expand your product offerings for increased revenue',
+      icon: <Package className="h-6 w-6" />,
+      color: 'blue' as const,
+      overlayContent: {
+        title: 'Product Expansion Strategy',
+        description: 'Learn how to strategically expand your product line for maximum growth',
+        sections: [
+          {
+            title: 'Strategic Product Development',
+            color: 'blue' as const,
+            content: (
+              <div className="space-y-4">
+                <p className={`${theme === 'gradient' ? 'text-gray-300' : 'text-gray-600 dark:text-gray-300'}`}>
+                  Develop a systematic approach to expanding your product line based on data-driven insights and market demand.
+                </p>
+                <h4 className={`font-semibold ${theme === 'gradient' ? 'text-white' : 'text-gray-900 dark:text-white'}`}>Expansion Strategy:</h4>
+                <ul className={`list-disc pl-6 space-y-2 ${theme === 'gradient' ? 'text-gray-300' : 'text-gray-600 dark:text-gray-300'}`}>
+                  <li>Market research and trend analysis</li>
+                  <li>Customer feedback and demand validation</li>
+                  <li>Complementary product identification</li>
+                  <li>Seasonal and limited edition strategies</li>
+                </ul>
+                <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mt-6">
+                  <ClickableCard onClick={() => {}}>
+                    <div className="p-4 text-center">
+                      <Package className={`h-8 w-8 mx-auto mb-3 ${theme === 'gradient' ? 'text-blue-400' : 'text-blue-600'}`} />
+                      <h4 className={`font-semibold mb-2 ${theme === 'gradient' ? 'text-white' : 'text-gray-900 dark:text-white'}`}>
+                        Product Research
+                      </h4>
+                      <p className={`text-sm ${theme === 'gradient' ? 'text-gray-300' : 'text-gray-600 dark:text-gray-300'}`}>
+                        Identify winning products
+                      </p>
+                    </div>
+                  </ClickableCard>
+                  <ClickableCard onClick={() => {}}>
+                    <div className="p-4 text-center">
+                      <Users className={`h-8 w-8 mx-auto mb-3 ${theme === 'gradient' ? 'text-purple-400' : 'text-purple-600'}`} />
+                      <h4 className={`font-semibold mb-2 ${theme === 'gradient' ? 'text-white' : 'text-gray-900 dark:text-white'}`}>
+                        Customer Validation
+                      </h4>
+                      <p className={`text-sm ${theme === 'gradient' ? 'text-gray-300' : 'text-gray-600 dark:text-gray-300'}`}>
+                        Validate demand early
+                      </p>
+                    </div>
+                  </ClickableCard>
+                  <ClickableCard onClick={() => {}}>
+                    <div className="p-4 text-center">
+                      <Star className={`h-8 w-8 mx-auto mb-3 ${theme === 'gradient' ? 'text-yellow-400' : 'text-yellow-600'}`} />
+                      <h4 className={`font-semibold mb-2 ${theme === 'gradient' ? 'text-white' : 'text-gray-900 dark:text-white'}`}>
+                        Premium Lines
+                      </h4>
+                      <p className={`text-sm ${theme === 'gradient' ? 'text-gray-300' : 'text-gray-600 dark:text-gray-300'}`}>
+                        High-margin offerings
+                      </p>
+                    </div>
+                  </ClickableCard>
+                </div>
+              </div>
+            ),
+            resources: [
+              { title: 'Product Research Framework', url: '#' },
+              { title: 'Market Analysis Template', url: '#' }
+            ],
+            checklist: [
+              'Analyze current product performance',
+              'Research market trends and gaps',
+              'Validate new product concepts',
+              'Plan product launch timeline'
+            ]
+          }
+        ]
+      }
+    },
+    {
+      id: 'operations-optimization',
+      title: 'Operations & Fulfillment Optimization',
+      description: 'Scale your operations to handle increased order volume efficiently',
+      icon: <Truck className="h-6 w-6" />,
+      color: 'orange' as const,
+      overlayContent: {
+        title: 'Operations Scaling Guide',
+        description: 'Optimize your operations for seamless scaling and customer satisfaction',
+        sections: [
+          {
+            title: 'Operational Excellence Framework',
+            color: 'orange' as const,
+            content: (
+              <div className="space-y-4">
+                <p className={`${theme === 'gradient' ? 'text-gray-300' : 'text-gray-600 dark:text-gray-300'}`}>
+                  Build robust operational systems that can handle rapid growth while maintaining quality and efficiency.
+                </p>
+                <h4 className={`font-semibold ${theme === 'gradient' ? 'text-white' : 'text-gray-900 dark:text-white'}`}>Key Optimization Areas:</h4>
+                <ul className={`list-disc pl-6 space-y-2 ${theme === 'gradient' ? 'text-gray-300' : 'text-gray-600 dark:text-gray-300'}`}>
+                  <li>Automated inventory management systems</li>
+                  <li>Strategic fulfillment partnerships</li>
+                  <li>Customer service automation</li>
+                  <li>Quality control and returns management</li>
+                </ul>
+                <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mt-6">
+                  <ClickableCard onClick={() => {}}>
+                    <div className="p-4 text-center">
+                      <Truck className={`h-8 w-8 mx-auto mb-3 ${theme === 'gradient' ? 'text-orange-400' : 'text-orange-600'}`} />
+                      <h4 className={`font-semibold mb-2 ${theme === 'gradient' ? 'text-white' : 'text-gray-900 dark:text-white'}`}>
+                        Fulfillment
+                      </h4>
+                      <p className={`text-sm ${theme === 'gradient' ? 'text-gray-300' : 'text-gray-600 dark:text-gray-300'}`}>
+                        Streamline shipping process
+                      </p>
+                    </div>
+                  </ClickableCard>
+                  <ClickableCard onClick={() => {}}>
+                    <div className="p-4 text-center">
+                      <Zap className={`h-8 w-8 mx-auto mb-3 ${theme === 'gradient' ? 'text-yellow-400' : 'text-yellow-600'}`} />
+                      <h4 className={`font-semibold mb-2 ${theme === 'gradient' ? 'text-white' : 'text-gray-900 dark:text-white'}`}>
+                        Automation
+                      </h4>
+                      <p className={`text-sm ${theme === 'gradient' ? 'text-gray-300' : 'text-gray-600 dark:text-gray-300'}`}>
+                        Automate key processes
+                      </p>
+                    </div>
+                  </ClickableCard>
+                  <ClickableCard onClick={() => {}}>
+                    <div className="p-4 text-center">
+                      <CheckCircle className={`h-8 w-8 mx-auto mb-3 ${theme === 'gradient' ? 'text-green-400' : 'text-green-600'}`} />
+                      <h4 className={`font-semibold mb-2 ${theme === 'gradient' ? 'text-white' : 'text-gray-900 dark:text-white'}`}>
+                        Quality Control
+                      </h4>
+                      <p className={`text-sm ${theme === 'gradient' ? 'text-gray-300' : 'text-gray-600 dark:text-gray-300'}`}>
+                        Maintain high standards
+                      </p>
+                    </div>
+                  </ClickableCard>
+                </div>
+              </div>
+            ),
+            resources: [
+              { title: 'Operations Optimization Guide', url: '#' },
+              { title: 'Fulfillment Partner Directory', url: '#' }
+            ],
+            checklist: [
+              'Audit current operational processes',
+              'Implement inventory management system',
+              'Establish fulfillment partnerships',
+              'Set up automated customer service'
+            ]
+          }
+        ]
+      }
+    },
+    {
+      id: 'revenue-optimization',
+      title: 'Advanced Revenue Optimization',
+      description: 'Implement advanced strategies to maximize customer lifetime value',
+      icon: <DollarSign className="h-6 w-6" />,
+      color: 'yellow' as const,
+      overlayContent: {
+        title: 'Revenue Optimization Strategy',
+        description: 'Advanced techniques to maximize revenue and customer lifetime value',
+        sections: [
+          {
+            title: 'Customer Lifetime Value Maximization',
+            color: 'yellow' as const,
+            content: (
+              <div className="space-y-4">
+                <p className={`${theme === 'gradient' ? 'text-gray-300' : 'text-gray-600 dark:text-gray-300'}`}>
+                  Implement sophisticated strategies to increase customer lifetime value and create sustainable revenue growth.
+                </p>
+                <h4 className={`font-semibold ${theme === 'gradient' ? 'text-white' : 'text-gray-900 dark:text-white'}`}>Revenue Strategies:</h4>
+                <ul className={`list-disc pl-6 space-y-2 ${theme === 'gradient' ? 'text-gray-300' : 'text-gray-600 dark:text-gray-300'}`}>
+                  <li>Tiered loyalty and rewards programs</li>
+                  <li>Subscription and recurring revenue models</li>
+                  <li>Premium product line development</li>
+                  <li>Cross-selling and upselling automation</li>
+                </ul>
+                <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mt-6">
+                  <ClickableCard onClick={() => {}}>
+                    <div className="p-4 text-center">
+                      <DollarSign className={`h-8 w-8 mx-auto mb-3 ${theme === 'gradient' ? 'text-yellow-400' : 'text-yellow-600'}`} />
+                      <h4 className={`font-semibold mb-2 ${theme === 'gradient' ? 'text-white' : 'text-gray-900 dark:text-white'}`}>
+                        Revenue Streams
+                      </h4>
+                      <p className={`text-sm ${theme === 'gradient' ? 'text-gray-300' : 'text-gray-600 dark:text-gray-300'}`}>
+                        Diversify income sources
+                      </p>
+                    </div>
+                  </ClickableCard>
+                  <ClickableCard onClick={() => {}}>
+                    <div className="p-4 text-center">
+                      <Users className={`h-8 w-8 mx-auto mb-3 ${theme === 'gradient' ? 'text-purple-400' : 'text-purple-600'}`} />
+                      <h4 className={`font-semibold mb-2 ${theme === 'gradient' ? 'text-white' : 'text-gray-900 dark:text-white'}`}>
+                        Loyalty Programs
+                      </h4>
+                      <p className={`text-sm ${theme === 'gradient' ? 'text-gray-300' : 'text-gray-600 dark:text-gray-300'}`}>
+                        Retain and reward customers
+                      </p>
+                    </div>
+                  </ClickableCard>
+                  <ClickableCard onClick={() => {}}>
+                    <div className="p-4 text-center">
+                      <Star className={`h-8 w-8 mx-auto mb-3 ${theme === 'gradient' ? 'text-blue-400' : 'text-blue-600'}`} />
+                      <h4 className={`font-semibold mb-2 ${theme === 'gradient' ? 'text-white' : 'text-gray-900 dark:text-white'}`}>
+                        Premium Offerings
+                      </h4>
+                      <p className={`text-sm ${theme === 'gradient' ? 'text-gray-300' : 'text-gray-600 dark:text-gray-300'}`}>
+                        High-value products & services
+                      </p>
+                    </div>
+                  </ClickableCard>
+                </div>
+              </div>
+            ),
+            resources: [
+              { title: 'CLV Optimization Guide', url: '#' },
+              { title: 'Loyalty Program Templates', url: '#' }
+            ],
+            checklist: [
+              'Calculate current customer lifetime value',
+              'Design loyalty program structure',
+              'Develop premium product offerings',
+              'Implement subscription model options'
+            ]
+          }
+        ]
+      }
+    }
+  ];
+
   return (
     <div className="space-y-6">
-      <h2 className={`text-xl font-bold ${
-        theme === 'gradient' ? 'text-white' : 'text-gray-900 dark:text-white'
-      }`}>
+      <h2 className={`text-2xl font-bold ${theme === 'gradient' ? 'text-white' : 'text-gray-900 dark:text-white'}`}>
         Scaling & Monetization
       </h2>
       
-      <p className={`${
-        theme === 'gradient' ? 'text-gray-300' : 'text-gray-600 dark:text-gray-300'
-      }`}>
+      <p className={`text-lg ${theme === 'gradient' ? 'text-gray-300' : 'text-gray-600 dark:text-gray-300'}`}>
         Systematically scale your clothing brand to six and seven figures with these proven strategies.
       </p>
-      
-      <div className="space-y-4">
-        {[
-          {
-            title: "Paid Advertising Scaling System",
-            description: "Implement a systematic approach to scaling paid advertising",
-            steps: [
-              "Set up proper tracking and attribution for accurate ROAS measurement",
-              "Implement the 'Vertical Scaling' method for Facebook/Instagram ads",
-              "Develop cross-platform retargeting strategies for maximum conversion"
-            ]
-          },
-          {
-            title: "Product Line Expansion",
-            description: "Strategically expand your product offerings for increased revenue",
-            steps: [
-              "Analyze sales data to identify high-performing product categories",
-              "Implement the 'Horizontal Expansion' strategy for complementary products",
-              "Develop limited edition and seasonal release strategies"
-            ]
-          },
-          {
-            title: "Operations & Fulfillment Optimization",
-            description: "Scale your operations to handle increased order volume efficiently",
-            steps: [
-              "Set up automated inventory management systems",
-              "Implement strategic shipping and fulfillment partnerships",
-              "Develop customer service automation with AI support"
-            ]
-          },
-          {
-            title: "Advanced Revenue Optimization",
-            description: "Implement advanced strategies to maximize customer lifetime value",
-            steps: [
-              "Develop tiered loyalty and rewards programs",
-              "Implement subscription models for recurring revenue",
-              "Create high-ticket premium product lines for increased margins"
-            ]
-          }
-        ].map((section, index) => (
-          <Card key={index} className={theme === 'gradient' ? 'bg-gray-800/50' : ''}>
-            <h3 className={`text-lg font-semibold mb-2 ${
-              theme === 'gradient' ? 'text-white' : 'text-gray-900 dark:text-white'
-            }`}>
+
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+        {scalingSections.map((section) => (
+          <ClickableCard 
+            key={section.id}
+            onClick={() => setActiveOverlay(section.id)}
+            className={`p-6 border-l-4 border-${section.color}-500 transition-all duration-200 hover:scale-105`}
+          >
+            <div className="flex items-start space-x-4">
+              <div className={`p-3 rounded-lg bg-${section.color}-100 dark:bg-${section.color}-900/30 text-${section.color}-600 dark:text-${section.color}-400`}>
+                {section.icon}
+              </div>
+              <div className="flex-1">
+                <h3 className={`text-lg font-semibold mb-2 ${theme === 'gradient' ? 'text-white' : 'text-gray-900 dark:text-white'}`}>
               {section.title}
             </h3>
-            <p className={`text-sm mb-4 ${
-              theme === 'gradient' ? 'text-gray-300' : 'text-gray-600 dark:text-gray-300'
-            }`}>
+                <p className={`text-sm ${theme === 'gradient' ? 'text-gray-300' : 'text-gray-600 dark:text-gray-300'}`}>
               {section.description}
             </p>
-            <div className="space-y-2">
-              {section.steps.map((step, stepIndex) => (
-                <div key={stepIndex} className="flex items-start">
-                  <CheckCircle className="h-5 w-5 text-green-500 mr-2 flex-shrink-0 mt-0.5" />
-                  <span className={`text-sm ${
-                    theme === 'gradient' ? 'text-gray-300' : 'text-gray-600 dark:text-gray-300'
-                  }`}>
-                    {step}
-                  </span>
+                <div className="mt-3">
+                  <ArrowRight className={`h-4 w-4 text-${section.color}-500`} />
                 </div>
-              ))}
+              </div>
             </div>
-          </Card>
+          </ClickableCard>
         ))}
       </div>
+
+      {/* Guide Overlays */}
+      {scalingSections.map((section) => (
+        <GuideOverlay
+          key={`overlay-${section.id}`}
+          isOpen={activeOverlay === section.id}
+          onClose={() => setActiveOverlay(null)}
+          title={section.overlayContent.title}
+          description={section.overlayContent.description}
+          sections={section.overlayContent.sections}
+        />
+      ))}
       
       <div className="flex justify-end">
-        <Button onClick={() => {}}>
-          Download Scaling Blueprint
+        <Button onClick={() => setActiveOverlay('paid-advertising')}>
+          Start Scaling Blueprint
         </Button>
       </div>
     </div>
