@@ -2,6 +2,8 @@ import React, { useState } from 'react';
 import { useTheme } from '../../components/ui/ThemeProvider';
 import { Card } from '../../components/ui/Card';
 import { Button } from '../../components/ui/Button';
+import { GuideOverlay } from '../../components/shared/GuideOverlay';
+import { ClickableCard } from '../../components/shared/ClickableCard';
 import { 
   Ghost, 
   Image, 
@@ -24,6 +26,7 @@ import {
 const AiInfluencer: React.FC = () => {
   const { theme } = useTheme();
   const [activeTab, setActiveTab] = useState('character-creation');
+  const [activeOverlay, setActiveOverlay] = useState<string | null>(null);
 
   const tabs = [
     { id: 'character-creation', label: 'AI Character Creation', icon: <Ghost className="h-4 w-4" /> },
@@ -36,17 +39,17 @@ const AiInfluencer: React.FC = () => {
   const renderTabContent = () => {
     switch (activeTab) {
       case 'character-creation':
-        return <CharacterCreationContent />;
+        return <CharacterCreationContent activeOverlay={activeOverlay} setActiveOverlay={setActiveOverlay} />;
       case 'content-automation':
-        return <ContentAutomationContent />;
+        return <ContentAutomationContent activeOverlay={activeOverlay} setActiveOverlay={setActiveOverlay} />;
       case 'monetization':
-        return <MonetizationContent />;
+        return <MonetizationContent activeOverlay={activeOverlay} setActiveOverlay={setActiveOverlay} />;
       case 'multi-platform':
-        return <MultiPlatformContent />;
+        return <MultiPlatformContent activeOverlay={activeOverlay} setActiveOverlay={setActiveOverlay} />;
       case 'empire-scaling':
-        return <EmpireScalingContent />;
+        return <EmpireScalingContent activeOverlay={activeOverlay} setActiveOverlay={setActiveOverlay} />;
       default:
-        return <CharacterCreationContent />;
+        return <CharacterCreationContent activeOverlay={activeOverlay} setActiveOverlay={setActiveOverlay} />;
     }
   };
 
@@ -178,462 +181,1567 @@ const AiInfluencer: React.FC = () => {
 };
 
 // Tab Content Components
-const CharacterCreationContent: React.FC = () => {
+const CharacterCreationContent: React.FC<{ activeOverlay: string | null; setActiveOverlay: React.Dispatch<React.SetStateAction<string | null>> }> = ({ activeOverlay, setActiveOverlay }) => {
   const { theme } = useTheme();
   
+  const characterSections = [
+    {
+      id: 'niche-research',
+      title: 'Niche & Audience Research',
+      description: 'Identify profitable niches and audience segments for your AI influencers',
+      icon: <Target className="h-6 w-6" />,
+      color: 'blue' as const,
+      overlayContent: {
+        title: 'Niche & Audience Research Guide',
+        description: 'Master the art of identifying profitable niches and building targeted audiences',
+        sections: [
+          {
+            title: 'Strategic Niche Selection',
+            color: 'blue' as const,
+            content: (
+              <div className="space-y-4">
+                <p className={`${theme === 'gradient' ? 'text-gray-300' : 'text-gray-600 dark:text-gray-300'}`}>
+                  Learn how to identify and evaluate profitable niches for your AI influencer empire.
+                </p>
+                <h4 className={`font-semibold ${theme === 'gradient' ? 'text-white' : 'text-gray-900 dark:text-white'}`}>Research Framework:</h4>
+                <ul className={`list-disc pl-6 space-y-2 ${theme === 'gradient' ? 'text-gray-300' : 'text-gray-600 dark:text-gray-300'}`}>
+                  <li>Analyze trending topics with high engagement potential</li>
+                  <li>Evaluate monetization opportunities within each niche</li>
+                  <li>Study competitor performance and market saturation</li>
+                  <li>Identify underserved audience segments and gaps</li>
+                </ul>
+                <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mt-6">
+                  <ClickableCard onClick={() => {}}>
+                    <div className="p-4 text-center">
+                      <TrendingUp className={`h-8 w-8 mx-auto mb-3 ${theme === 'gradient' ? 'text-blue-400' : 'text-blue-600'}`} />
+                      <h4 className={`font-semibold mb-2 ${theme === 'gradient' ? 'text-white' : 'text-gray-900 dark:text-white'}`}>
+                        Trend Analysis
+                      </h4>
+                      <p className={`text-sm ${theme === 'gradient' ? 'text-gray-300' : 'text-gray-600 dark:text-gray-300'}`}>
+                        Identify rising trends
+                      </p>
+                    </div>
+                  </ClickableCard>
+                  <ClickableCard onClick={() => {}}>
+                    <div className="p-4 text-center">
+                      <DollarSign className={`h-8 w-8 mx-auto mb-3 ${theme === 'gradient' ? 'text-green-400' : 'text-green-600'}`} />
+                      <h4 className={`font-semibold mb-2 ${theme === 'gradient' ? 'text-white' : 'text-gray-900 dark:text-white'}`}>
+                        Monetization Potential
+                      </h4>
+                      <p className={`text-sm ${theme === 'gradient' ? 'text-gray-300' : 'text-gray-600 dark:text-gray-300'}`}>
+                        Evaluate profit opportunities
+                      </p>
+                    </div>
+                  </ClickableCard>
+                  <ClickableCard onClick={() => {}}>
+                    <div className="p-4 text-center">
+                      <Users className={`h-8 w-8 mx-auto mb-3 ${theme === 'gradient' ? 'text-purple-400' : 'text-purple-600'}`} />
+                      <h4 className={`font-semibold mb-2 ${theme === 'gradient' ? 'text-white' : 'text-gray-900 dark:text-white'}`}>
+                        Audience Analysis
+                      </h4>
+                      <p className={`text-sm ${theme === 'gradient' ? 'text-gray-300' : 'text-gray-600 dark:text-gray-300'}`}>
+                        Study target demographics
+                      </p>
+                    </div>
+                  </ClickableCard>
+                </div>
+              </div>
+            ),
+            resources: [
+              { title: 'Niche Research Template', url: '#' },
+              { title: 'Audience Analysis Worksheet', url: '#' }
+            ],
+            checklist: [
+              'Research trending topics and hashtags',
+              'Analyze competitor performance',
+              'Identify monetization opportunities',
+              'Define target audience personas'
+            ]
+          }
+        ]
+      }
+    },
+    {
+      id: 'character-development',
+      title: 'Character Development',
+      description: 'Create compelling AI personalities with depth and authenticity',
+      icon: <Ghost className="h-6 w-6" />,
+      color: 'purple' as const,
+      overlayContent: {
+        title: 'AI Character Development Guide',
+        description: 'Build authentic AI personalities that resonate with audiences',
+        sections: [
+          {
+            title: 'Personality Architecture',
+            color: 'purple' as const,
+            content: (
+              <div className="space-y-4">
+                <p className={`${theme === 'gradient' ? 'text-gray-300' : 'text-gray-600 dark:text-gray-300'}`}>
+                  Create multi-dimensional AI personalities with authentic traits and consistent behavior patterns.
+                </p>
+                <h4 className={`font-semibold ${theme === 'gradient' ? 'text-white' : 'text-gray-900 dark:text-white'}`}>Development Framework:</h4>
+                <ul className={`list-disc pl-6 space-y-2 ${theme === 'gradient' ? 'text-gray-300' : 'text-gray-600 dark:text-gray-300'}`}>
+                  <li>Define core personality traits and characteristics</li>
+                  <li>Create compelling backstory and life experiences</li>
+                  <li>Establish values, beliefs, and worldview</li>
+                  <li>Design speech patterns and communication style</li>
+                </ul>
+                <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mt-6">
+                  <ClickableCard onClick={() => {}}>
+                    <div className="p-4 text-center">
+                      <Ghost className={`h-8 w-8 mx-auto mb-3 ${theme === 'gradient' ? 'text-purple-400' : 'text-purple-600'}`} />
+                      <h4 className={`font-semibold mb-2 ${theme === 'gradient' ? 'text-white' : 'text-gray-900 dark:text-white'}`}>
+                        Core Identity
+                      </h4>
+                      <p className={`text-sm ${theme === 'gradient' ? 'text-gray-300' : 'text-gray-600 dark:text-gray-300'}`}>
+                        Define fundamental traits
+                      </p>
+                    </div>
+                  </ClickableCard>
+                  <ClickableCard onClick={() => {}}>
+                    <div className="p-4 text-center">
+                      <FileText className={`h-8 w-8 mx-auto mb-3 ${theme === 'gradient' ? 'text-blue-400' : 'text-blue-600'}`} />
+                      <h4 className={`font-semibold mb-2 ${theme === 'gradient' ? 'text-white' : 'text-gray-900 dark:text-white'}`}>
+                        Backstory Creation
+                      </h4>
+                      <p className={`text-sm ${theme === 'gradient' ? 'text-gray-300' : 'text-gray-600 dark:text-gray-300'}`}>
+                        Build compelling history
+                      </p>
+                    </div>
+                  </ClickableCard>
+                  <ClickableCard onClick={() => {}}>
+                    <div className="p-4 text-center">
+                      <MessageSquare className={`h-8 w-8 mx-auto mb-3 ${theme === 'gradient' ? 'text-green-400' : 'text-green-600'}`} />
+                      <h4 className={`font-semibold mb-2 ${theme === 'gradient' ? 'text-white' : 'text-gray-900 dark:text-white'}`}>
+                        Voice & Style
+                      </h4>
+                      <p className={`text-sm ${theme === 'gradient' ? 'text-gray-300' : 'text-gray-600 dark:text-gray-300'}`}>
+                        Develop unique voice
+                      </p>
+                    </div>
+                  </ClickableCard>
+                </div>
+              </div>
+            ),
+            resources: [
+              { title: 'Character Development Template', url: '#' },
+              { title: 'Personality Framework Guide', url: '#' }
+            ],
+            checklist: [
+              'Define core personality traits',
+              'Create detailed backstory',
+              'Establish voice and tone',
+              'Design behavioral patterns'
+            ]
+          }
+        ]
+      }
+    },
+    {
+      id: 'visual-identity',
+      title: 'Visual Identity Creation',
+      description: 'Generate consistent, high-quality visual assets for your AI influencer',
+      icon: <Image className="h-6 w-6" />,
+      color: 'green' as const,
+      overlayContent: {
+        title: 'Visual Identity Creation Guide',
+        description: 'Master AI-powered visual content creation for consistent branding',
+        sections: [
+          {
+            title: 'AI Image Generation Mastery',
+            color: 'green' as const,
+            content: (
+              <div className="space-y-4">
+                <p className={`${theme === 'gradient' ? 'text-gray-300' : 'text-gray-600 dark:text-gray-300'}`}>
+                  Create consistent, high-quality visual content using advanced AI image generation tools.
+                </p>
+                <h4 className={`font-semibold ${theme === 'gradient' ? 'text-white' : 'text-gray-900 dark:text-white'}`}>Visual Strategy:</h4>
+                <ul className={`list-disc pl-6 space-y-2 ${theme === 'gradient' ? 'text-gray-300' : 'text-gray-600 dark:text-gray-300'}`}>
+                  <li>Master Midjourney and Leonardo.AI for character consistency</li>
+                  <li>Develop style guides for visual coherence</li>
+                  <li>Create diverse content for different scenarios</li>
+                  <li>Optimize images for each platform's requirements</li>
+                </ul>
+                <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mt-6">
+                  <ClickableCard onClick={() => {}}>
+                    <div className="p-4 text-center">
+                      <Camera className={`h-8 w-8 mx-auto mb-3 ${theme === 'gradient' ? 'text-green-400' : 'text-green-600'}`} />
+                      <h4 className={`font-semibold mb-2 ${theme === 'gradient' ? 'text-white' : 'text-gray-900 dark:text-white'}`}>
+                        AI Photography
+                      </h4>
+                      <p className={`text-sm ${theme === 'gradient' ? 'text-gray-300' : 'text-gray-600 dark:text-gray-300'}`}>
+                        Generate realistic photos
+                      </p>
+                    </div>
+                  </ClickableCard>
+                  <ClickableCard onClick={() => {}}>
+                    <div className="p-4 text-center">
+                      <Image className={`h-8 w-8 mx-auto mb-3 ${theme === 'gradient' ? 'text-blue-400' : 'text-blue-600'}`} />
+                      <h4 className={`font-semibold mb-2 ${theme === 'gradient' ? 'text-white' : 'text-gray-900 dark:text-white'}`}>
+                        Style Consistency
+                      </h4>
+                      <p className={`text-sm ${theme === 'gradient' ? 'text-gray-300' : 'text-gray-600 dark:text-gray-300'}`}>
+                        Maintain visual identity
+                      </p>
+                    </div>
+                  </ClickableCard>
+                  <ClickableCard onClick={() => {}}>
+                    <div className="p-4 text-center">
+                      <Zap className={`h-8 w-8 mx-auto mb-3 ${theme === 'gradient' ? 'text-yellow-400' : 'text-yellow-600'}`} />
+                      <h4 className={`font-semibold mb-2 ${theme === 'gradient' ? 'text-white' : 'text-gray-900 dark:text-white'}`}>
+                        Batch Creation
+                      </h4>
+                      <p className={`text-sm ${theme === 'gradient' ? 'text-gray-300' : 'text-gray-600 dark:text-gray-300'}`}>
+                        Scale content production
+                      </p>
+                    </div>
+                  </ClickableCard>
+                </div>
+              </div>
+            ),
+            resources: [
+              { title: 'AI Prompt Library', url: '#' },
+              { title: 'Style Guide Template', url: '#' }
+            ],
+            checklist: [
+              'Set up AI image generation tools',
+              'Create character consistency guide',
+              'Generate diverse image library',
+              'Optimize for platform specs'
+            ]
+          }
+        ]
+      }
+    },
+    {
+      id: 'platform-optimization',
+      title: 'Platform-Specific Optimization',
+      description: 'Tailor your AI influencer for maximum impact on each platform',
+      icon: <Globe className="h-6 w-6" />,
+      color: 'orange' as const,
+      overlayContent: {
+        title: 'Multi-Platform Optimization Guide',
+        description: 'Optimize your AI influencer presence across all major platforms',
+        sections: [
+          {
+            title: 'Platform Strategy Framework',
+            color: 'orange' as const,
+            content: (
+              <div className="space-y-4">
+                <p className={`${theme === 'gradient' ? 'text-gray-300' : 'text-gray-600 dark:text-gray-300'}`}>
+                  Adapt your AI influencer's presence for maximum impact on each platform's unique algorithm and audience.
+                </p>
+                <h4 className={`font-semibold ${theme === 'gradient' ? 'text-white' : 'text-gray-900 dark:text-white'}`}>Optimization Strategy:</h4>
+                <ul className={`list-disc pl-6 space-y-2 ${theme === 'gradient' ? 'text-gray-300' : 'text-gray-600 dark:text-gray-300'}`}>
+                  <li>Customize content format for each platform</li>
+                  <li>Optimize posting schedules and frequency</li>
+                  <li>Adapt voice and tone for platform culture</li>
+                  <li>Leverage platform-specific features and trends</li>
+                </ul>
+                <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mt-6">
+                  <ClickableCard onClick={() => {}}>
+                    <div className="p-4 text-center">
+                      <Instagram className={`h-8 w-8 mx-auto mb-3 ${theme === 'gradient' ? 'text-pink-400' : 'text-pink-600'}`} />
+                      <h4 className={`font-semibold mb-2 ${theme === 'gradient' ? 'text-white' : 'text-gray-900 dark:text-white'}`}>
+                        Instagram Strategy
+                      </h4>
+                      <p className={`text-sm ${theme === 'gradient' ? 'text-gray-300' : 'text-gray-600 dark:text-gray-300'}`}>
+                        Visual storytelling focus
+                      </p>
+                    </div>
+                  </ClickableCard>
+                  <ClickableCard onClick={() => {}}>
+                    <div className="p-4 text-center">
+                      <Youtube className={`h-8 w-8 mx-auto mb-3 ${theme === 'gradient' ? 'text-red-400' : 'text-red-600'}`} />
+                      <h4 className={`font-semibold mb-2 ${theme === 'gradient' ? 'text-white' : 'text-gray-900 dark:text-white'}`}>
+                        YouTube Content
+                      </h4>
+                      <p className={`text-sm ${theme === 'gradient' ? 'text-gray-300' : 'text-gray-600 dark:text-gray-300'}`}>
+                        Long-form engagement
+                      </p>
+                    </div>
+                  </ClickableCard>
+                  <ClickableCard onClick={() => {}}>
+                    <div className="p-4 text-center">
+                      <Twitter className={`h-8 w-8 mx-auto mb-3 ${theme === 'gradient' ? 'text-blue-400' : 'text-blue-600'}`} />
+                      <h4 className={`font-semibold mb-2 ${theme === 'gradient' ? 'text-white' : 'text-gray-900 dark:text-white'}`}>
+                        Twitter/X Presence
+                      </h4>
+                      <p className={`text-sm ${theme === 'gradient' ? 'text-gray-300' : 'text-gray-600 dark:text-gray-300'}`}>
+                        Real-time conversations
+                      </p>
+                    </div>
+                  </ClickableCard>
+                </div>
+              </div>
+            ),
+            resources: [
+              { title: 'Platform Specs Guide', url: '#' },
+              { title: 'Content Calendar Template', url: '#' }
+            ],
+            checklist: [
+              'Research platform algorithms',
+              'Create platform-specific content',
+              'Optimize posting schedules',
+              'Adapt character for each audience'
+            ]
+          }
+        ]
+      }
+    }
+  ];
+
   return (
     <div className="space-y-6">
-      <h2 className={`text-xl font-bold ${
-        theme === 'gradient' ? 'text-white' : 'text-gray-900 dark:text-white'
-      }`}>
+      <h2 className={`text-2xl font-bold ${theme === 'gradient' ? 'text-white' : 'text-gray-900 dark:text-white'}`}>
         AI Character Creation
       </h2>
       
-      <p className={`${
-        theme === 'gradient' ? 'text-gray-300' : 'text-gray-600 dark:text-gray-300'
-      }`}>
+      <p className={`text-lg ${theme === 'gradient' ? 'text-gray-300' : 'text-gray-600 dark:text-gray-300'}`}>
         Create compelling AI influencer personalities that connect with audiences and build loyal followings.
       </p>
-      
-      <div className="space-y-4">
-        {[
-          {
-            title: "Niche & Audience Research",
-            description: "Identify profitable niches and audience segments for your AI influencers",
-            steps: [
-              "Research trending niches with high engagement and monetization potential",
-              "Analyze competitor AI and human influencers in your target niche",
-              "Identify specific audience pain points and desires to address"
-            ]
-          },
-          {
-            title: "Character Development",
-            description: "Create compelling AI personalities with depth and authenticity",
-            steps: [
-              "Develop detailed character backstories and personality traits",
-              "Create consistent voice, opinions, and values for your AI persona",
-              "Design character arcs and growth narratives for long-term engagement"
-            ]
-          },
-          {
-            title: "Visual Identity Creation",
-            description: "Generate consistent, high-quality visual assets for your AI influencer",
-            steps: [
-              "Use Midjourney or Leonardo.AI to create consistent character images",
-              "Develop a visual style guide for consistent appearance across posts",
-              "Create diverse image sets for different content contexts and scenarios"
-            ]
-          },
-          {
-            title: "Platform-Specific Optimization",
-            description: "Tailor your AI influencer for maximum impact on each platform",
-            steps: [
-              "Adapt character presentation for Instagram, TikTok, YouTube, and Twitter",
-              "Develop platform-specific content strategies and posting schedules",
-              "Create custom visual assets optimized for each platform's requirements"
-            ]
-          }
-        ].map((section, index) => (
-          <Card key={index} className={theme === 'gradient' ? 'bg-gray-800/50' : ''}>
-            <h3 className={`text-lg font-semibold mb-2 ${
-              theme === 'gradient' ? 'text-white' : 'text-gray-900 dark:text-white'
-            }`}>
+
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+        {characterSections.map((section) => (
+          <ClickableCard 
+            key={section.id}
+            onClick={() => setActiveOverlay(section.id)}
+            className={`p-6 border-l-4 border-${section.color}-500 transition-all duration-200 hover:scale-105`}
+          >
+            <div className="flex items-start space-x-4">
+              <div className={`p-3 rounded-lg bg-${section.color}-100 dark:bg-${section.color}-900/30 text-${section.color}-600 dark:text-${section.color}-400`}>
+                {section.icon}
+              </div>
+              <div className="flex-1">
+                <h3 className={`text-lg font-semibold mb-2 ${theme === 'gradient' ? 'text-white' : 'text-gray-900 dark:text-white'}`}>
               {section.title}
             </h3>
-            <p className={`text-sm mb-4 ${
-              theme === 'gradient' ? 'text-gray-300' : 'text-gray-600 dark:text-gray-300'
-            }`}>
+                <p className={`text-sm ${theme === 'gradient' ? 'text-gray-300' : 'text-gray-600 dark:text-gray-300'}`}>
               {section.description}
             </p>
-            <div className="space-y-2">
-              {section.steps.map((step, stepIndex) => (
-                <div key={stepIndex} className="flex items-start">
-                  <CheckCircle className="h-5 w-5 text-green-500 mr-2 flex-shrink-0 mt-0.5" />
-                  <span className={`text-sm ${
-                    theme === 'gradient' ? 'text-gray-300' : 'text-gray-600 dark:text-gray-300'
-                  }`}>
-                    {step}
-                  </span>
+                <div className="mt-3">
+                  <ArrowRight className={`h-4 w-4 text-${section.color}-500`} />
                 </div>
-              ))}
             </div>
-          </Card>
+            </div>
+          </ClickableCard>
         ))}
       </div>
+
+      {/* Guide Overlays */}
+      {characterSections.map((section) => (
+        <GuideOverlay
+          key={`overlay-${section.id}`}
+          isOpen={activeOverlay === section.id}
+          onClose={() => setActiveOverlay(null)}
+          title={section.overlayContent.title}
+          description={section.overlayContent.description}
+          sections={section.overlayContent.sections}
+        />
+      ))}
       
       <div className="flex justify-end">
-        <Button onClick={() => {}}>
-          Download Character Creation Templates
+        <Button onClick={() => setActiveOverlay('niche-research')}>
+          Start Character Creation
         </Button>
       </div>
     </div>
   );
 };
 
-const ContentAutomationContent: React.FC = () => {
+const ContentAutomationContent: React.FC<{ activeOverlay: string | null; setActiveOverlay: React.Dispatch<React.SetStateAction<string | null>> }> = ({ activeOverlay, setActiveOverlay }) => {
   const { theme } = useTheme();
   
+  const automationSections = [
+    {
+      id: 'content-generation',
+      title: 'Content Generation System',
+      description: 'Create a systematic approach to generating engaging content at scale',
+      icon: <FileText className="h-6 w-6" />,
+      color: 'blue' as const,
+      overlayContent: {
+        title: 'AI Content Generation Mastery',
+        description: 'Build automated systems for creating high-quality content at scale',
+        sections: [
+          {
+            title: 'AI-Powered Content Creation',
+            color: 'blue' as const,
+            content: (
+              <div className="space-y-4">
+                <p className={`${theme === 'gradient' ? 'text-gray-300' : 'text-gray-600 dark:text-gray-300'}`}>
+                  Leverage cutting-edge AI tools to create authentic, engaging content that resonates with your audience.
+                </p>
+                <h4 className={`font-semibold ${theme === 'gradient' ? 'text-white' : 'text-gray-900 dark:text-white'}`}>Content Creation Stack:</h4>
+                <ul className={`list-disc pl-6 space-y-2 ${theme === 'gradient' ? 'text-gray-300' : 'text-gray-600 dark:text-gray-300'}`}>
+                  <li>GPT-4 and Claude for text content generation</li>
+                  <li>Midjourney and Leonardo.AI for visual content</li>
+                  <li>Runway and Synthesia for video content</li>
+                  <li>ElevenLabs for voice synthesis and audio</li>
+                </ul>
+                <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mt-6">
+                  <ClickableCard onClick={() => {}}>
+                    <div className="p-4 text-center">
+                      <FileText className={`h-8 w-8 mx-auto mb-3 ${theme === 'gradient' ? 'text-blue-400' : 'text-blue-600'}`} />
+                      <h4 className={`font-semibold mb-2 ${theme === 'gradient' ? 'text-white' : 'text-gray-900 dark:text-white'}`}>
+                        Text Generation
+                      </h4>
+                      <p className={`text-sm ${theme === 'gradient' ? 'text-gray-300' : 'text-gray-600 dark:text-gray-300'}`}>
+                        AI-powered writing
+                      </p>
+                    </div>
+                  </ClickableCard>
+                  <ClickableCard onClick={() => {}}>
+                    <div className="p-4 text-center">
+                      <Image className={`h-8 w-8 mx-auto mb-3 ${theme === 'gradient' ? 'text-green-400' : 'text-green-600'}`} />
+                      <h4 className={`font-semibold mb-2 ${theme === 'gradient' ? 'text-white' : 'text-gray-900 dark:text-white'}`}>
+                        Visual Content
+                      </h4>
+                      <p className={`text-sm ${theme === 'gradient' ? 'text-gray-300' : 'text-gray-600 dark:text-gray-300'}`}>
+                        AI image generation
+                      </p>
+                    </div>
+                  </ClickableCard>
+                  <ClickableCard onClick={() => {}}>
+                    <div className="p-4 text-center">
+                      <Camera className={`h-8 w-8 mx-auto mb-3 ${theme === 'gradient' ? 'text-purple-400' : 'text-purple-600'}`} />
+                      <h4 className={`font-semibold mb-2 ${theme === 'gradient' ? 'text-white' : 'text-gray-900 dark:text-white'}`}>
+                        Video Creation
+                      </h4>
+                      <p className={`text-sm ${theme === 'gradient' ? 'text-gray-300' : 'text-gray-600 dark:text-gray-300'}`}>
+                        Automated video production
+                      </p>
+                    </div>
+                  </ClickableCard>
+                </div>
+              </div>
+            ),
+            resources: [
+              { title: 'AI Tools Setup Guide', url: '#' },
+              { title: 'Content Generation Workflows', url: '#' }
+            ],
+            checklist: [
+              'Set up AI content generation tools',
+              'Create content templates and prompts',
+              'Establish quality control processes',
+              'Build content approval workflows'
+            ]
+          }
+        ]
+      }
+    },
+    {
+      id: 'content-calendar',
+      title: 'Content Calendar & Batching',
+      description: 'Develop efficient content planning and creation processes',
+      icon: <Target className="h-6 w-6" />,
+      color: 'green' as const,
+      overlayContent: {
+        title: 'Strategic Content Planning',
+        description: 'Master content planning and batch creation for maximum efficiency',
+        sections: [
+          {
+            title: 'Content Strategy Framework',
+            color: 'green' as const,
+            content: (
+              <div className="space-y-4">
+                <p className={`${theme === 'gradient' ? 'text-gray-300' : 'text-gray-600 dark:text-gray-300'}`}>
+                  Build a systematic approach to content planning that ensures consistency and maximizes engagement.
+                </p>
+                <h4 className={`font-semibold ${theme === 'gradient' ? 'text-white' : 'text-gray-900 dark:text-white'}`}>Planning System:</h4>
+                <ul className={`list-disc pl-6 space-y-2 ${theme === 'gradient' ? 'text-gray-300' : 'text-gray-600 dark:text-gray-300'}`}>
+                  <li>Content pillars and theme development</li>
+                  <li>Seasonal and trending topic integration</li>
+                  <li>Batch creation workflows for efficiency</li>
+                  <li>Cross-platform content optimization</li>
+                </ul>
+                <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mt-6">
+                  <ClickableCard onClick={() => {}}>
+                    <div className="p-4 text-center">
+                      <Target className={`h-8 w-8 mx-auto mb-3 ${theme === 'gradient' ? 'text-green-400' : 'text-green-600'}`} />
+                      <h4 className={`font-semibold mb-2 ${theme === 'gradient' ? 'text-white' : 'text-gray-900 dark:text-white'}`}>
+                        Content Strategy
+                      </h4>
+                      <p className={`text-sm ${theme === 'gradient' ? 'text-gray-300' : 'text-gray-600 dark:text-gray-300'}`}>
+                        Strategic planning
+                      </p>
+                    </div>
+                  </ClickableCard>
+                  <ClickableCard onClick={() => {}}>
+                    <div className="p-4 text-center">
+                      <Zap className={`h-8 w-8 mx-auto mb-3 ${theme === 'gradient' ? 'text-yellow-400' : 'text-yellow-600'}`} />
+                      <h4 className={`font-semibold mb-2 ${theme === 'gradient' ? 'text-white' : 'text-gray-900 dark:text-white'}`}>
+                        Batch Creation
+                      </h4>
+                      <p className={`text-sm ${theme === 'gradient' ? 'text-gray-300' : 'text-gray-600 dark:text-gray-300'}`}>
+                        Efficiency workflows
+                      </p>
+                    </div>
+                  </ClickableCard>
+                  <ClickableCard onClick={() => {}}>
+                    <div className="p-4 text-center">
+                      <TrendingUp className={`h-8 w-8 mx-auto mb-3 ${theme === 'gradient' ? 'text-blue-400' : 'text-blue-600'}`} />
+                      <h4 className={`font-semibold mb-2 ${theme === 'gradient' ? 'text-white' : 'text-gray-900 dark:text-white'}`}>
+                        Trend Integration
+                      </h4>
+                      <p className={`text-sm ${theme === 'gradient' ? 'text-gray-300' : 'text-gray-600 dark:text-gray-300'}`}>
+                        Timely content
+                      </p>
+                    </div>
+                  </ClickableCard>
+                </div>
+              </div>
+            ),
+            resources: [
+              { title: 'Content Calendar Template', url: '#' },
+              { title: 'Batch Creation Workflow', url: '#' }
+            ],
+            checklist: [
+              'Create monthly content calendar',
+              'Define content pillars and themes',
+              'Set up batch creation schedule',
+              'Establish content asset library'
+            ]
+          }
+        ]
+      }
+    },
+    {
+      id: 'automated-scheduling',
+      title: 'Automated Scheduling',
+      description: 'Implement tools and systems for automated content publishing',
+      icon: <Globe className="h-6 w-6" />,
+      color: 'purple' as const,
+      overlayContent: {
+        title: 'Automated Publishing Systems',
+        description: 'Build systems to automatically publish content across all platforms',
+        sections: [
+          {
+            title: 'Multi-Platform Automation',
+            color: 'purple' as const,
+            content: (
+              <div className="space-y-4">
+                <p className={`${theme === 'gradient' ? 'text-gray-300' : 'text-gray-600 dark:text-gray-300'}`}>
+                  Implement sophisticated scheduling systems that maximize reach and engagement across all platforms.
+                </p>
+                <h4 className={`font-semibold ${theme === 'gradient' ? 'text-white' : 'text-gray-900 dark:text-white'}`}>Automation Tools:</h4>
+                <ul className={`list-disc pl-6 space-y-2 ${theme === 'gradient' ? 'text-gray-300' : 'text-gray-600 dark:text-gray-300'}`}>
+                  <li>Buffer and Hootsuite for social scheduling</li>
+                  <li>Later for visual content optimization</li>
+                  <li>Zapier for workflow automation</li>
+                  <li>Custom APIs for advanced scheduling</li>
+                </ul>
+                <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mt-6">
+                  <ClickableCard onClick={() => {}}>
+                    <div className="p-4 text-center">
+                      <Globe className={`h-8 w-8 mx-auto mb-3 ${theme === 'gradient' ? 'text-purple-400' : 'text-purple-600'}`} />
+                      <h4 className={`font-semibold mb-2 ${theme === 'gradient' ? 'text-white' : 'text-gray-900 dark:text-white'}`}>
+                        Multi-Platform
+                      </h4>
+                      <p className={`text-sm ${theme === 'gradient' ? 'text-gray-300' : 'text-gray-600 dark:text-gray-300'}`}>
+                        Cross-platform scheduling
+                      </p>
+                    </div>
+                  </ClickableCard>
+                  <ClickableCard onClick={() => {}}>
+                    <div className="p-4 text-center">
+                      <Zap className={`h-8 w-8 mx-auto mb-3 ${theme === 'gradient' ? 'text-yellow-400' : 'text-yellow-600'}`} />
+                      <h4 className={`font-semibold mb-2 ${theme === 'gradient' ? 'text-white' : 'text-gray-900 dark:text-white'}`}>
+                        Smart Timing
+                      </h4>
+                      <p className={`text-sm ${theme === 'gradient' ? 'text-gray-300' : 'text-gray-600 dark:text-gray-300'}`}>
+                        Optimal posting times
+                      </p>
+                    </div>
+                  </ClickableCard>
+                  <ClickableCard onClick={() => {}}>
+                    <div className="p-4 text-center">
+                      <Target className={`h-8 w-8 mx-auto mb-3 ${theme === 'gradient' ? 'text-green-400' : 'text-green-600'}`} />
+                      <h4 className={`font-semibold mb-2 ${theme === 'gradient' ? 'text-white' : 'text-gray-900 dark:text-white'}`}>
+                        Audience Targeting
+                      </h4>
+                      <p className={`text-sm ${theme === 'gradient' ? 'text-gray-300' : 'text-gray-600 dark:text-gray-300'}`}>
+                        Platform optimization
+                      </p>
+                    </div>
+                  </ClickableCard>
+                </div>
+              </div>
+            ),
+            resources: [
+              { title: 'Scheduling Tools Comparison', url: '#' },
+              { title: 'Automation Setup Guide', url: '#' }
+            ],
+            checklist: [
+              'Choose scheduling platform',
+              'Connect all social accounts',
+              'Set optimal posting schedules',
+              'Test automation workflows'
+            ]
+          }
+        ]
+      }
+    },
+    {
+      id: 'engagement-automation',
+      title: 'Engagement Automation',
+      description: 'Automate audience interaction while maintaining authenticity',
+      icon: <MessageSquare className="h-6 w-6" />,
+      color: 'orange' as const,
+      overlayContent: {
+        title: 'Intelligent Engagement Systems',
+        description: 'Automate audience interactions while maintaining authentic connections',
+        sections: [
+          {
+            title: 'AI-Powered Engagement',
+            color: 'orange' as const,
+            content: (
+              <div className="space-y-4">
+                <p className={`${theme === 'gradient' ? 'text-gray-300' : 'text-gray-600 dark:text-gray-300'}`}>
+                  Build intelligent systems that can engage with your audience authentically while scaling your reach.
+                </p>
+                <h4 className={`font-semibold ${theme === 'gradient' ? 'text-white' : 'text-gray-900 dark:text-white'}`}>Engagement Strategy:</h4>
+                <ul className={`list-disc pl-6 space-y-2 ${theme === 'gradient' ? 'text-gray-300' : 'text-gray-600 dark:text-gray-300'}`}>
+                  <li>AI-powered comment and message responses</li>
+                  <li>Engagement monitoring and priority flagging</li>
+                  <li>Authentic interaction templates</li>
+                  <li>Community management automation</li>
+                </ul>
+                <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mt-6">
+                  <ClickableCard onClick={() => {}}>
+                    <div className="p-4 text-center">
+                      <MessageSquare className={`h-8 w-8 mx-auto mb-3 ${theme === 'gradient' ? 'text-orange-400' : 'text-orange-600'}`} />
+                      <h4 className={`font-semibold mb-2 ${theme === 'gradient' ? 'text-white' : 'text-gray-900 dark:text-white'}`}>
+                        Smart Responses
+                      </h4>
+                      <p className={`text-sm ${theme === 'gradient' ? 'text-gray-300' : 'text-gray-600 dark:text-gray-300'}`}>
+                        AI-powered replies
+                      </p>
+                    </div>
+                  </ClickableCard>
+                  <ClickableCard onClick={() => {}}>
+                    <div className="p-4 text-center">
+                      <Users className={`h-8 w-8 mx-auto mb-3 ${theme === 'gradient' ? 'text-blue-400' : 'text-blue-600'}`} />
+                      <h4 className={`font-semibold mb-2 ${theme === 'gradient' ? 'text-white' : 'text-gray-900 dark:text-white'}`}>
+                        Community Management
+                      </h4>
+                      <p className={`text-sm ${theme === 'gradient' ? 'text-gray-300' : 'text-gray-600 dark:text-gray-300'}`}>
+                        Automated moderation
+                      </p>
+                    </div>
+                  </ClickableCard>
+                  <ClickableCard onClick={() => {}}>
+                    <div className="p-4 text-center">
+                      <TrendingUp className={`h-8 w-8 mx-auto mb-3 ${theme === 'gradient' ? 'text-green-400' : 'text-green-600'}`} />
+                      <h4 className={`font-semibold mb-2 ${theme === 'gradient' ? 'text-white' : 'text-gray-900 dark:text-white'}`}>
+                        Engagement Growth
+                      </h4>
+                      <p className={`text-sm ${theme === 'gradient' ? 'text-gray-300' : 'text-gray-600 dark:text-gray-300'}`}>
+                        Scale interactions
+                      </p>
+                    </div>
+                  </ClickableCard>
+                </div>
+              </div>
+            ),
+            resources: [
+              { title: 'Engagement Automation Tools', url: '#' },
+              { title: 'Response Template Library', url: '#' }
+            ],
+            checklist: [
+              'Set up AI response systems',
+              'Create interaction templates',
+              'Configure engagement monitoring',
+              'Test automation accuracy'
+            ]
+          }
+        ]
+      }
+    }
+  ];
+
   return (
     <div className="space-y-6">
-      <h2 className={`text-xl font-bold ${
-        theme === 'gradient' ? 'text-white' : 'text-gray-900 dark:text-white'
-      }`}>
+      <h2 className={`text-2xl font-bold ${theme === 'gradient' ? 'text-white' : 'text-gray-900 dark:text-white'}`}>
         Content Automation
       </h2>
       
-      <p className={`${
-        theme === 'gradient' ? 'text-gray-300' : 'text-gray-600 dark:text-gray-300'
-      }`}>
+      <p className={`text-lg ${theme === 'gradient' ? 'text-gray-300' : 'text-gray-600 dark:text-gray-300'}`}>
         Build systems to automate content creation, scheduling, and engagement for your AI influencers.
       </p>
-      
-      <div className="space-y-4">
-        {[
-          {
-            title: "Content Generation System",
-            description: "Create a systematic approach to generating engaging content at scale",
-            steps: [
-              "Set up AI tools for text content generation (GPT-4, Claude)",
-              "Implement image generation workflow with Midjourney or Leonardo.AI",
-              "Create video content automation with Runway or similar tools"
-            ]
-          },
-          {
-            title: "Content Calendar & Batching",
-            description: "Develop efficient content planning and creation processes",
-            steps: [
-              "Create a strategic content calendar with theme days and content pillars",
-              "Implement batch creation processes for efficiency (weekly/monthly)",
-              "Set up content libraries and asset management systems"
-            ]
-          },
-          {
-            title: "Automated Scheduling",
-            description: "Implement tools and systems for automated content publishing",
-            steps: [
-              "Set up scheduling tools for each platform (Later, Buffer, etc.)",
-              "Create optimal posting schedules based on audience analytics",
-              "Implement cross-platform coordination for cohesive messaging"
-            ]
-          },
-          {
-            title: "Engagement Automation",
-            description: "Automate audience interaction while maintaining authenticity",
-            steps: [
-              "Set up AI-powered comment and message response systems",
-              "Create templates for common interactions and questions",
-              "Implement engagement monitoring and priority flagging for manual review"
-            ]
-          }
-        ].map((section, index) => (
-          <Card key={index} className={theme === 'gradient' ? 'bg-gray-800/50' : ''}>
-            <h3 className={`text-lg font-semibold mb-2 ${
-              theme === 'gradient' ? 'text-white' : 'text-gray-900 dark:text-white'
-            }`}>
+
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+        {automationSections.map((section) => (
+          <ClickableCard 
+            key={section.id}
+            onClick={() => setActiveOverlay(section.id)}
+            className={`p-6 border-l-4 border-${section.color}-500 transition-all duration-200 hover:scale-105`}
+          >
+            <div className="flex items-start space-x-4">
+              <div className={`p-3 rounded-lg bg-${section.color}-100 dark:bg-${section.color}-900/30 text-${section.color}-600 dark:text-${section.color}-400`}>
+                {section.icon}
+              </div>
+              <div className="flex-1">
+                <h3 className={`text-lg font-semibold mb-2 ${theme === 'gradient' ? 'text-white' : 'text-gray-900 dark:text-white'}`}>
               {section.title}
             </h3>
-            <p className={`text-sm mb-4 ${
-              theme === 'gradient' ? 'text-gray-300' : 'text-gray-600 dark:text-gray-300'
-            }`}>
+                <p className={`text-sm ${theme === 'gradient' ? 'text-gray-300' : 'text-gray-600 dark:text-gray-300'}`}>
               {section.description}
             </p>
-            <div className="space-y-2">
-              {section.steps.map((step, stepIndex) => (
-                <div key={stepIndex} className="flex items-start">
-                  <CheckCircle className="h-5 w-5 text-green-500 mr-2 flex-shrink-0 mt-0.5" />
-                  <span className={`text-sm ${
-                    theme === 'gradient' ? 'text-gray-300' : 'text-gray-600 dark:text-gray-300'
-                  }`}>
-                    {step}
-                  </span>
+                <div className="mt-3">
+                  <ArrowRight className={`h-4 w-4 text-${section.color}-500`} />
                 </div>
-              ))}
             </div>
-          </Card>
+            </div>
+          </ClickableCard>
         ))}
       </div>
+
+      {/* Guide Overlays */}
+      {automationSections.map((section) => (
+        <GuideOverlay
+          key={`overlay-${section.id}`}
+          isOpen={activeOverlay === section.id}
+          onClose={() => setActiveOverlay(null)}
+          title={section.overlayContent.title}
+          description={section.overlayContent.description}
+          sections={section.overlayContent.sections}
+        />
+      ))}
       
       <div className="flex justify-end">
-        <Button onClick={() => {}}>
-          Download Content Automation Playbook
+        <Button onClick={() => setActiveOverlay('content-generation')}>
+          Start Content Automation
         </Button>
       </div>
     </div>
   );
 };
 
-const MonetizationContent: React.FC = () => {
+const MonetizationContent: React.FC<{ activeOverlay: string | null; setActiveOverlay: React.Dispatch<React.SetStateAction<string | null>> }> = ({ activeOverlay, setActiveOverlay }) => {
   const { theme } = useTheme();
   
+  const monetizationSections = [
+    {
+      id: 'brand-partnerships',
+      title: 'Brand Sponsorships & Partnerships',
+      description: 'Secure lucrative brand deals for your AI influencers',
+      icon: <DollarSign className="h-6 w-6" />,
+      color: 'green' as const,
+      overlayContent: {
+        title: 'Brand Partnership Mastery',
+        description: 'Master the art of securing high-value brand partnerships and sponsorships',
+        sections: [
+          {
+            title: 'Strategic Partnership Development',
+            color: 'green' as const,
+            content: (
+              <div className="space-y-4">
+                <p className={`${theme === 'gradient' ? 'text-gray-300' : 'text-gray-600 dark:text-gray-300'}`}>
+                  Build relationships with brands and create compelling partnership proposals that generate substantial revenue.
+                </p>
+                <h4 className={`font-semibold ${theme === 'gradient' ? 'text-white' : 'text-gray-900 dark:text-white'}`}>Partnership Framework:</h4>
+                <ul className={`list-disc pl-6 space-y-2 ${theme === 'gradient' ? 'text-gray-300' : 'text-gray-600 dark:text-gray-300'}`}>
+                  <li>Professional media kit development</li>
+                  <li>Brand outreach and relationship building</li>
+                  <li>Pricing strategies and rate negotiation</li>
+                  <li>Contract creation and partnership management</li>
+                </ul>
+                <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mt-6">
+                  <ClickableCard onClick={() => {}}>
+                    <div className="p-4 text-center">
+                      <DollarSign className={`h-8 w-8 mx-auto mb-3 ${theme === 'gradient' ? 'text-green-400' : 'text-green-600'}`} />
+                      <h4 className={`font-semibold mb-2 ${theme === 'gradient' ? 'text-white' : 'text-gray-900 dark:text-white'}`}>
+                        Media Kit Creation
+                      </h4>
+                      <p className={`text-sm ${theme === 'gradient' ? 'text-gray-300' : 'text-gray-600 dark:text-gray-300'}`}>
+                        Professional presentation
+                      </p>
+                    </div>
+                  </ClickableCard>
+                  <ClickableCard onClick={() => {}}>
+                    <div className="p-4 text-center">
+                      <Users className={`h-8 w-8 mx-auto mb-3 ${theme === 'gradient' ? 'text-blue-400' : 'text-blue-600'}`} />
+                      <h4 className={`font-semibold mb-2 ${theme === 'gradient' ? 'text-white' : 'text-gray-900 dark:text-white'}`}>
+                        Brand Outreach
+                      </h4>
+                      <p className={`text-sm ${theme === 'gradient' ? 'text-gray-300' : 'text-gray-600 dark:text-gray-300'}`}>
+                        Strategic networking
+                      </p>
+                    </div>
+                  </ClickableCard>
+                  <ClickableCard onClick={() => {}}>
+                    <div className="p-4 text-center">
+                      <Target className={`h-8 w-8 mx-auto mb-3 ${theme === 'gradient' ? 'text-purple-400' : 'text-purple-600'}`} />
+                      <h4 className={`font-semibold mb-2 ${theme === 'gradient' ? 'text-white' : 'text-gray-900 dark:text-white'}`}>
+                        Rate Negotiation
+                      </h4>
+                      <p className={`text-sm ${theme === 'gradient' ? 'text-gray-300' : 'text-gray-600 dark:text-gray-300'}`}>
+                        Maximize earnings
+                      </p>
+                    </div>
+                  </ClickableCard>
+                </div>
+              </div>
+            ),
+            resources: [
+              { title: 'Media Kit Template', url: '#' },
+              { title: 'Brand Outreach Scripts', url: '#' }
+            ],
+            checklist: [
+              'Create professional media kit',
+              'Research target brands',
+              'Develop outreach strategy',
+              'Set partnership rates'
+            ]
+          }
+        ],
+      }
+    },
+    {
+      id: 'digital-products',
+      title: 'Digital Product Creation',
+      description: 'Develop and sell digital products to your audience',
+      icon: <FileText className="h-6 w-6" />,
+      color: 'blue' as const,
+      overlayContent: {
+        title: 'Digital Product Empire',
+        description: 'Create and launch profitable digital products for your AI influencer audience',
+        sections: [
+          {
+            title: 'Product Development Strategy',
+            color: 'blue' as const,
+            content: (
+              <div className="space-y-4">
+                <p className={`${theme === 'gradient' ? 'text-gray-300' : 'text-gray-600 dark:text-gray-300'}`}>
+                  Create high-value digital products that serve your audience and generate passive income streams.
+                </p>
+                <h4 className={`font-semibold ${theme === 'gradient' ? 'text-white' : 'text-gray-900 dark:text-white'}`}>Product Portfolio:</h4>
+                <ul className={`list-disc pl-6 space-y-2 ${theme === 'gradient' ? 'text-gray-300' : 'text-gray-600 dark:text-gray-300'}`}>
+                  <li>Online courses and educational content</li>
+                  <li>Templates, guides, and digital tools</li>
+                  <li>Exclusive content and digital experiences</li>
+                  <li>Software tools and AI-powered solutions</li>
+                </ul>
+                <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mt-6">
+                  <ClickableCard onClick={() => {}}>
+                    <div className="p-4 text-center">
+                      <FileText className={`h-8 w-8 mx-auto mb-3 ${theme === 'gradient' ? 'text-blue-400' : 'text-blue-600'}`} />
+                      <h4 className={`font-semibold mb-2 ${theme === 'gradient' ? 'text-white' : 'text-gray-900 dark:text-white'}`}>
+                        Course Creation
+                      </h4>
+                      <p className={`text-sm ${theme === 'gradient' ? 'text-gray-300' : 'text-gray-600 dark:text-gray-300'}`}>
+                        Educational products
+                      </p>
+                    </div>
+                  </ClickableCard>
+                  <ClickableCard onClick={() => {}}>
+                    <div className="p-4 text-center">
+                      <Target className={`h-8 w-8 mx-auto mb-3 ${theme === 'gradient' ? 'text-green-400' : 'text-green-600'}`} />
+                      <h4 className={`font-semibold mb-2 ${theme === 'gradient' ? 'text-white' : 'text-gray-900 dark:text-white'}`}>
+                        Templates & Tools
+                      </h4>
+                      <p className={`text-sm ${theme === 'gradient' ? 'text-gray-300' : 'text-gray-600 dark:text-gray-300'}`}>
+                        Practical resources
+                      </p>
+                    </div>
+                  </ClickableCard>
+                  <ClickableCard onClick={() => {}}>
+                    <div className="p-4 text-center">
+                      <Zap className={`h-8 w-8 mx-auto mb-3 ${theme === 'gradient' ? 'text-yellow-400' : 'text-yellow-600'}`} />
+                      <h4 className={`font-semibold mb-2 ${theme === 'gradient' ? 'text-white' : 'text-gray-900 dark:text-white'}`}>
+                        AI Solutions
+                      </h4>
+                      <p className={`text-sm ${theme === 'gradient' ? 'text-gray-300' : 'text-gray-600 dark:text-gray-300'}`}>
+                        Software products
+                      </p>
+                    </div>
+                  </ClickableCard>
+                </div>
+              </div>
+            ),
+            resources: [
+              { title: 'Product Development Framework', url: '#' },
+              { title: 'Launch Strategy Guide', url: '#' }
+            ],
+            checklist: [
+              'Identify audience needs',
+              'Create product roadmap',
+              'Build minimum viable product',
+              'Launch and iterate'
+            ]
+          }
+        ]
+      }
+    },
+    {
+      id: 'affiliate-marketing',
+      title: 'Affiliate Marketing Systems',
+      description: 'Generate passive income through strategic affiliate partnerships',
+      icon: <TrendingUp className="h-6 w-6" />,
+      color: 'purple' as const,
+      overlayContent: {
+        title: 'Affiliate Marketing Mastery',
+        description: 'Build profitable affiliate marketing systems for sustainable passive income',
+        sections: [
+          {
+            title: 'Strategic Affiliate Framework',
+            color: 'purple' as const,
+            content: (
+              <div className="space-y-4">
+                <p className={`${theme === 'gradient' ? 'text-gray-300' : 'text-gray-600 dark:text-gray-300'}`}>
+                  Create authentic affiliate marketing strategies that provide value to your audience while generating substantial commissions.
+                </p>
+                <h4 className={`font-semibold ${theme === 'gradient' ? 'text-white' : 'text-gray-900 dark:text-white'}`}>Affiliate Strategy:</h4>
+                <ul className={`list-disc pl-6 space-y-2 ${theme === 'gradient' ? 'text-gray-300' : 'text-gray-600 dark:text-gray-300'}`}>
+                  <li>High-commission affiliate program research</li>
+                  <li>Authentic product recommendation systems</li>
+                  <li>Performance tracking and optimization</li>
+                  <li>Trust-building and transparency practices</li>
+                </ul>
+                <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mt-6">
+                  <ClickableCard onClick={() => {}}>
+                    <div className="p-4 text-center">
+                      <TrendingUp className={`h-8 w-8 mx-auto mb-3 ${theme === 'gradient' ? 'text-purple-400' : 'text-purple-600'}`} />
+                      <h4 className={`font-semibold mb-2 ${theme === 'gradient' ? 'text-white' : 'text-gray-900 dark:text-white'}`}>
+                        Program Selection
+                      </h4>
+                      <p className={`text-sm ${theme === 'gradient' ? 'text-gray-300' : 'text-gray-600 dark:text-gray-300'}`}>
+                        High-value partnerships
+                      </p>
+                    </div>
+                  </ClickableCard>
+                  <ClickableCard onClick={() => {}}>
+                    <div className="p-4 text-center">
+                      <Target className={`h-8 w-8 mx-auto mb-3 ${theme === 'gradient' ? 'text-green-400' : 'text-green-600'}`} />
+                      <h4 className={`font-semibold mb-2 ${theme === 'gradient' ? 'text-white' : 'text-gray-900 dark:text-white'}`}>
+                        Content Strategy
+                      </h4>
+                      <p className={`text-sm ${theme === 'gradient' ? 'text-gray-300' : 'text-gray-600 dark:text-gray-300'}`}>
+                        Authentic recommendations
+                      </p>
+                    </div>
+                  </ClickableCard>
+                  <ClickableCard onClick={() => {}}>
+                    <div className="p-4 text-center">
+                      <DollarSign className={`h-8 w-8 mx-auto mb-3 ${theme === 'gradient' ? 'text-yellow-400' : 'text-yellow-600'}`} />
+                      <h4 className={`font-semibold mb-2 ${theme === 'gradient' ? 'text-white' : 'text-gray-900 dark:text-white'}`}>
+                        Performance Tracking
+                      </h4>
+                      <p className={`text-sm ${theme === 'gradient' ? 'text-gray-300' : 'text-gray-600 dark:text-gray-300'}`}>
+                        Optimize conversions
+                      </p>
+                    </div>
+                  </ClickableCard>
+                </div>
+              </div>
+            ),
+            resources: [
+              { title: 'Affiliate Program Database', url: '#' },
+              { title: 'Conversion Optimization Guide', url: '#' }
+            ],
+            checklist: [
+              'Research affiliate programs',
+              'Apply to relevant programs',
+              'Create content strategy',
+              'Track and optimize performance'
+            ]
+          }
+        ]
+      }
+    },
+    {
+      id: 'premium-content',
+      title: 'Premium Content & Memberships',
+      description: 'Create exclusive content and membership offerings',
+      icon: <Users className="h-6 w-6" />,
+      color: 'orange' as const,
+      overlayContent: {
+        title: 'Premium Content Strategy',
+        description: 'Build exclusive membership offerings that create recurring revenue streams',
+        sections: [
+          {
+            title: 'Membership Business Model',
+            color: 'orange' as const,
+            content: (
+              <div className="space-y-4">
+                <p className={`${theme === 'gradient' ? 'text-gray-300' : 'text-gray-600 dark:text-gray-300'}`}>
+                  Create exclusive content offerings that provide ongoing value and generate predictable recurring revenue.
+                </p>
+                <h4 className={`font-semibold ${theme === 'gradient' ? 'text-white' : 'text-gray-900 dark:text-white'}`}>Membership Framework:</h4>
+                <ul className={`list-disc pl-6 space-y-2 ${theme === 'gradient' ? 'text-gray-300' : 'text-gray-600 dark:text-gray-300'}`}>
+                  <li>Tiered membership structure development</li>
+                  <li>Exclusive content creation and delivery</li>
+                  <li>Community building and engagement</li>
+                  <li>Automated member onboarding and retention</li>
+                </ul>
+                <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mt-6">
+                  <ClickableCard onClick={() => {}}>
+                    <div className="p-4 text-center">
+                      <Users className={`h-8 w-8 mx-auto mb-3 ${theme === 'gradient' ? 'text-orange-400' : 'text-orange-600'}`} />
+                      <h4 className={`font-semibold mb-2 ${theme === 'gradient' ? 'text-white' : 'text-gray-900 dark:text-white'}`}>
+                        Membership Tiers
+                      </h4>
+                      <p className={`text-sm ${theme === 'gradient' ? 'text-gray-300' : 'text-gray-600 dark:text-gray-300'}`}>
+                        Structured offerings
+                      </p>
+                    </div>
+                  </ClickableCard>
+                  <ClickableCard onClick={() => {}}>
+                    <div className="p-4 text-center">
+                      <FileText className={`h-8 w-8 mx-auto mb-3 ${theme === 'gradient' ? 'text-blue-400' : 'text-blue-600'}`} />
+                      <h4 className={`font-semibold mb-2 ${theme === 'gradient' ? 'text-white' : 'text-gray-900 dark:text-white'}`}>
+                        Exclusive Content
+                      </h4>
+                      <p className={`text-sm ${theme === 'gradient' ? 'text-gray-300' : 'text-gray-600 dark:text-gray-300'}`}>
+                        Premium experiences
+                      </p>
+                    </div>
+                  </ClickableCard>
+                  <ClickableCard onClick={() => {}}>
+                    <div className="p-4 text-center">
+                      <Zap className={`h-8 w-8 mx-auto mb-3 ${theme === 'gradient' ? 'text-green-400' : 'text-green-600'}`} />
+                      <h4 className={`font-semibold mb-2 ${theme === 'gradient' ? 'text-white' : 'text-gray-900 dark:text-white'}`}>
+                        Automation
+                      </h4>
+                      <p className={`text-sm ${theme === 'gradient' ? 'text-gray-300' : 'text-gray-600 dark:text-gray-300'}`}>
+                        Scalable delivery
+                      </p>
+                    </div>
+                  </ClickableCard>
+                </div>
+              </div>
+            ),
+            resources: [
+              { title: 'Membership Platform Guide', url: '#' },
+              { title: 'Content Calendar Template', url: '#' }
+            ],
+            checklist: [
+              'Design membership tiers',
+              'Choose platform (Patreon, etc.)',
+              'Create exclusive content plan',
+              'Set up automated delivery'
+            ]
+          }
+        ]
+      }
+    }
+  ];
+
   return (
     <div className="space-y-6">
-      <h2 className={`text-xl font-bold ${
-        theme === 'gradient' ? 'text-white' : 'text-gray-900 dark:text-white'
-      }`}>
+      <h2 className={`text-2xl font-bold ${theme === 'gradient' ? 'text-white' : 'text-gray-900 dark:text-white'}`}>
         Monetization Strategies
       </h2>
       
-      <p className={`${
-        theme === 'gradient' ? 'text-gray-300' : 'text-gray-600 dark:text-gray-300'
-      }`}>
+      <p className={`text-lg ${theme === 'gradient' ? 'text-gray-300' : 'text-gray-600 dark:text-gray-300'}`}>
         Implement multiple revenue streams to maximize the profitability of your AI influencers.
       </p>
-      
-      <div className="space-y-4">
-        {[
-          {
-            title: "Brand Sponsorships & Partnerships",
-            description: "Secure lucrative brand deals for your AI influencers",
-            steps: [
-              "Create a professional media kit highlighting audience demographics and engagement",
-              "Develop outreach systems for connecting with relevant brands",
-              "Create pricing tiers and package offerings for different sponsorship levels"
-            ]
-          },
-          {
-            title: "Digital Product Creation",
-            description: "Develop and sell digital products to your audience",
-            steps: [
-              "Identify high-demand digital products aligned with your niche",
-              "Create digital products using AI tools (courses, templates, guides)",
-              "Implement automated sales and delivery systems"
-            ]
-          },
-          {
-            title: "Affiliate Marketing Systems",
-            description: "Generate passive income through strategic affiliate partnerships",
-            steps: [
-              "Research and join high-commission affiliate programs in your niche",
-              "Create authentic product recommendation content",
-              "Implement tracking and optimization systems for affiliate performance"
-            ]
-          },
-          {
-            title: "Premium Content & Memberships",
-            description: "Create exclusive content and membership offerings",
-            steps: [
-              "Develop tiered membership offerings with exclusive content",
-              "Set up platforms for premium content delivery (Patreon, OnlyFans, etc.)",
-              "Create automated content delivery systems for members"
-            ]
-          }
-        ].map((section, index) => (
-          <Card key={index} className={theme === 'gradient' ? 'bg-gray-800/50' : ''}>
-            <h3 className={`text-lg font-semibold mb-2 ${
-              theme === 'gradient' ? 'text-white' : 'text-gray-900 dark:text-white'
-            }`}>
+
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+        {monetizationSections.map((section) => (
+          <ClickableCard 
+            key={section.id}
+            onClick={() => setActiveOverlay(section.id)}
+            className={`p-6 border-l-4 border-${section.color}-500 transition-all duration-200 hover:scale-105`}
+          >
+            <div className="flex items-start space-x-4">
+              <div className={`p-3 rounded-lg bg-${section.color}-100 dark:bg-${section.color}-900/30 text-${section.color}-600 dark:text-${section.color}-400`}>
+                {section.icon}
+              </div>
+              <div className="flex-1">
+                <h3 className={`text-lg font-semibold mb-2 ${theme === 'gradient' ? 'text-white' : 'text-gray-900 dark:text-white'}`}>
               {section.title}
             </h3>
-            <p className={`text-sm mb-4 ${
-              theme === 'gradient' ? 'text-gray-300' : 'text-gray-600 dark:text-gray-300'
-            }`}>
+                <p className={`text-sm ${theme === 'gradient' ? 'text-gray-300' : 'text-gray-600 dark:text-gray-300'}`}>
               {section.description}
             </p>
-            <div className="space-y-2">
-              {section.steps.map((step, stepIndex) => (
-                <div key={stepIndex} className="flex items-start">
-                  <CheckCircle className="h-5 w-5 text-green-500 mr-2 flex-shrink-0 mt-0.5" />
-                  <span className={`text-sm ${
-                    theme === 'gradient' ? 'text-gray-300' : 'text-gray-600 dark:text-gray-300'
-                  }`}>
-                    {step}
-                  </span>
+                <div className="mt-3">
+                  <ArrowRight className={`h-4 w-4 text-${section.color}-500`} />
                 </div>
-              ))}
             </div>
-          </Card>
+            </div>
+          </ClickableCard>
         ))}
       </div>
+
+      {/* Guide Overlays */}
+      {monetizationSections.map((section) => (
+        <GuideOverlay
+          key={`overlay-${section.id}`}
+          isOpen={activeOverlay === section.id}
+          onClose={() => setActiveOverlay(null)}
+          title={section.overlayContent.title}
+          description={section.overlayContent.description}
+          sections={section.overlayContent.sections}
+        />
+      ))}
       
       <div className="flex justify-end">
-        <Button onClick={() => {}}>
-          Download Monetization Blueprint
+        <Button onClick={() => setActiveOverlay('brand-partnerships')}>
+          Start Monetization Strategy
         </Button>
       </div>
     </div>
   );
 };
 
-const MultiPlatformContent: React.FC = () => {
+const MultiPlatformContent: React.FC<{ activeOverlay: string | null; setActiveOverlay: React.Dispatch<React.SetStateAction<string | null>> }> = ({ activeOverlay, setActiveOverlay }) => {
   const { theme } = useTheme();
-  
-  return (
-    <div className="space-y-6">
-      <h2 className={`text-xl font-bold ${
-        theme === 'gradient' ? 'text-white' : 'text-gray-900 dark:text-white'
-      }`}>
-        Multi-Platform Growth
-      </h2>
-      
-      <p className={`${
-        theme === 'gradient' ? 'text-gray-300' : 'text-gray-600 dark:text-gray-300'
-      }`}>
-        Expand your AI influencer presence across multiple platforms for maximum reach and impact.
-      </p>
-      
-      <div className="space-y-4">
-        {[
+
+  const platformSections = [
+    {
+      id: 'platform-strategy',
+      title: 'Platform Selection & Strategy',
+      description: 'Choose and optimize your presence across different social platforms',
+      icon: <Globe className="h-6 w-6" />,
+      color: 'blue' as const,
+      overlayContent: {
+        title: 'Platform Strategy Guide',
+        description: 'Master the art of multi-platform presence and strategic growth',
+        sections: [
           {
-            title: "Instagram Strategy",
-            description: "Build a powerful Instagram presence for your AI influencer",
-            steps: [
-              "Implement the 'Content Pillar' strategy for consistent engagement",
-              "Master Instagram-specific features (Stories, Reels, Guides)",
-              "Develop growth tactics including hashtag strategies and collaboration systems"
-            ]
-          },
-          {
-            title: "TikTok Expansion",
-            description: "Leverage TikTok's algorithm for rapid AI influencer growth",
-            steps: [
-              "Create TikTok-optimized content formats and styles",
-              "Implement trend-jacking strategies for viral potential",
-              "Develop cross-promotion tactics between platforms"
-            ]
-          },
-          {
-            title: "YouTube Channel Development",
-            description: "Build a YouTube presence for deeper audience connection",
-            steps: [
-              "Set up AI-powered video creation workflow for YouTube",
-              "Implement SEO strategies for YouTube discoverability",
-              "Create content series and formats optimized for the platform"
-            ]
-          },
-          {
-            title: "Cross-Platform Synergy",
-            description: "Create systems for efficient multi-platform management",
-            steps: [
-              "Develop content repurposing workflows for cross-platform efficiency",
-              "Create unified branding and messaging across all platforms",
-              "Implement cross-platform analytics and performance tracking"
+            title: 'Platform Selection Framework',
+            color: 'blue' as const,
+            content: (
+              <div className="space-y-4">
+                <p className={`${theme === 'gradient' ? 'text-gray-300' : 'text-gray-600 dark:text-gray-300'}`}>
+                  Learn how to strategically select and prioritize social media platforms for your AI influencer.
+                </p>
+                <h4 className={`font-semibold ${theme === 'gradient' ? 'text-white' : 'text-gray-900 dark:text-white'}`}>Key Considerations:</h4>
+                <ul className={`list-disc pl-6 space-y-2 ${theme === 'gradient' ? 'text-gray-300' : 'text-gray-600 dark:text-gray-300'}`}>
+                  <li>Audience demographics and platform alignment</li>
+                  <li>Content format compatibility with AI generation</li>
+                  <li>Monetization opportunities per platform</li>
+                  <li>Cross-platform synergy potential</li>
+                </ul>
+                <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mt-6">
+                  <ClickableCard onClick={() => {}}>
+                    <div className="p-4 text-center">
+                      <Instagram className={`h-8 w-8 mx-auto mb-3 ${theme === 'gradient' ? 'text-pink-400' : 'text-pink-600'}`} />
+                      <h4 className={`font-semibold mb-2 ${theme === 'gradient' ? 'text-white' : 'text-gray-900 dark:text-white'}`}>
+                        Instagram Strategy
+                      </h4>
+                      <p className={`text-sm ${theme === 'gradient' ? 'text-gray-300' : 'text-gray-600 dark:text-gray-300'}`}>
+                        Visual content focus
+                      </p>
+                    </div>
+                  </ClickableCard>
+                  <ClickableCard onClick={() => {}}>
+                    <div className="p-4 text-center">
+                      <Youtube className={`h-8 w-8 mx-auto mb-3 ${theme === 'gradient' ? 'text-red-400' : 'text-red-600'}`} />
+                      <h4 className={`font-semibold mb-2 ${theme === 'gradient' ? 'text-white' : 'text-gray-900 dark:text-white'}`}>
+                        YouTube Strategy
+                      </h4>
+                      <p className={`text-sm ${theme === 'gradient' ? 'text-gray-300' : 'text-gray-600 dark:text-gray-300'}`}>
+                        Long-form content
+                      </p>
+                    </div>
+                  </ClickableCard>
+                  <ClickableCard onClick={() => {}}>
+                    <div className="p-4 text-center">
+                      <Twitter className={`h-8 w-8 mx-auto mb-3 ${theme === 'gradient' ? 'text-blue-400' : 'text-blue-600'}`} />
+                      <h4 className={`font-semibold mb-2 ${theme === 'gradient' ? 'text-white' : 'text-gray-900 dark:text-white'}`}>
+                        Twitter Strategy
+                      </h4>
+                      <p className={`text-sm ${theme === 'gradient' ? 'text-gray-300' : 'text-gray-600 dark:text-gray-300'}`}>
+                        Engagement focus
+                      </p>
+                    </div>
+                  </ClickableCard>
+                </div>
+              </div>
+            ),
+            resources: [
+              {
+                title: 'Platform Analysis Tools',
+                url: 'https://acadium.com/resources/platform-analysis'
+              },
+              {
+                title: 'Cross-Platform Strategy Guide',
+                url: 'https://acadium.com/resources/cross-platform-strategy'
+              }
             ]
           }
-        ].map((section, index) => (
-          <Card key={index} className={theme === 'gradient' ? 'bg-gray-800/50' : ''}>
-            <h3 className={`text-lg font-semibold mb-2 ${
-              theme === 'gradient' ? 'text-white' : 'text-gray-900 dark:text-white'
-            }`}>
-              {section.title}
-            </h3>
-            <p className={`text-sm mb-4 ${
-              theme === 'gradient' ? 'text-gray-300' : 'text-gray-600 dark:text-gray-300'
-            }`}>
-              {section.description}
-            </p>
-            <div className="space-y-2">
-              {section.steps.map((step, stepIndex) => (
-                <div key={stepIndex} className="flex items-start">
-                  <CheckCircle className="h-5 w-5 text-green-500 mr-2 flex-shrink-0 mt-0.5" />
-                  <span className={`text-sm ${
-                    theme === 'gradient' ? 'text-gray-300' : 'text-gray-600 dark:text-gray-300'
-                  }`}>
-                    {step}
-                  </span>
-                </div>
-              ))}
+        ]
+      }
+    },
+    {
+      id: 'content-adaptation',
+      title: 'Content Adaptation',
+      description: "Adapt and optimize content for each platform's unique requirements",
+      icon: <FileText className="h-6 w-6" />,
+      color: 'green' as const,
+      overlayContent: {
+        title: 'Content Adaptation Guide',
+        description: 'Learn how to effectively adapt your content for different platforms',
+        sections: [
+          {
+            title: 'Platform-Specific Content Strategy',
+            color: 'green' as const,
+            content: (
+              <div className="space-y-4">
+                <p className={`${theme === 'gradient' ? 'text-gray-300' : 'text-gray-600 dark:text-gray-300'}`}>
+                  Master the art of adapting your AI-generated content for different platforms while maintaining brand consistency.
+                </p>
+                <h4 className={`font-semibold ${theme === 'gradient' ? 'text-white' : 'text-gray-900 dark:text-white'}`}>Adaptation Framework:</h4>
+                <ul className={`list-disc pl-6 space-y-2 ${theme === 'gradient' ? 'text-gray-300' : 'text-gray-600 dark:text-gray-300'}`}>
+                  <li>Format optimization for each platform</li>
+                  <li>Platform-specific content requirements</li>
+                  <li>Timing and frequency adjustments</li>
+                  <li>Cross-platform content repurposing</li>
+                </ul>
+              </div>
+            ),
+            resources: [
+              {
+                title: 'Content Adaptation Templates',
+                url: 'https://acadium.com/resources/content-adaptation'
+              },
+              {
+                title: 'Platform Best Practices',
+                url: 'https://acadium.com/resources/platform-best-practices'
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      id: 'cross-promotion',
+      title: 'Cross-Platform Promotion',
+      description: 'Build synergy between platforms to maximize reach and engagement',
+      icon: <Users className="h-6 w-6" />,
+      color: 'purple' as const,
+      overlayContent: {
+        title: 'Cross-Platform Promotion Guide',
+        description: 'Maximize your reach through effective cross-platform promotion',
+        sections: [
+          {
+            title: 'Cross-Promotion Strategy',
+            color: 'purple' as const,
+            content: (
+              <div className="space-y-4">
+                <p className={`${theme === 'gradient' ? 'text-gray-300' : 'text-gray-600 dark:text-gray-300'}`}>
+                  Learn how to create effective cross-platform promotion strategies that drive traffic and engagement.
+                </p>
+                <h4 className={`font-semibold ${theme === 'gradient' ? 'text-white' : 'text-gray-900 dark:text-white'}`}>Key Strategies:</h4>
+                <ul className={`list-disc pl-6 space-y-2 ${theme === 'gradient' ? 'text-gray-300' : 'text-gray-600 dark:text-gray-300'}`}>
+                  <li>Platform-specific call-to-actions</li>
+                  <li>Content teasers and previews</li>
+                  <li>Cross-platform community building</li>
+                  <li>Unified branding strategy</li>
+                </ul>
+              </div>
+            ),
+            resources: [
+              {
+                title: 'Cross-Promotion Templates',
+                url: 'https://acadium.com/resources/cross-promotion'
+              },
+              {
+                title: 'Traffic Analysis Guide',
+                url: 'https://acadium.com/resources/traffic-analysis'
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      id: 'analytics-optimization',
+      title: 'Analytics & Optimization',
+      description: 'Track and optimize performance across all platforms',
+      icon: <TrendingUp className="h-6 w-6" />,
+      color: 'yellow' as const,
+      overlayContent: {
+        title: 'Analytics & Optimization Guide',
+        description: 'Master the art of data-driven optimization across platforms',
+        sections: [
+          {
+            title: 'Multi-Platform Analytics',
+            color: 'yellow' as const,
+            content: (
+              <div className="space-y-4">
+                <p className={`${theme === 'gradient' ? 'text-gray-300' : 'text-gray-600 dark:text-gray-300'}`}>
+                  Learn how to track, analyze, and optimize your performance across multiple platforms.
+                </p>
+                <h4 className={`font-semibold ${theme === 'gradient' ? 'text-white' : 'text-gray-900 dark:text-white'}`}>Key Metrics:</h4>
+                <ul className={`list-disc pl-6 space-y-2 ${theme === 'gradient' ? 'text-gray-300' : 'text-gray-600 dark:text-gray-300'}`}>
+                  <li>Platform-specific performance metrics</li>
+                  <li>Cross-platform engagement tracking</li>
+                  <li>ROI analysis per platform</li>
+                  <li>Growth rate comparison</li>
+                </ul>
+              </div>
+            ),
+            resources: [
+              {
+                title: 'Analytics Tools Guide',
+                url: 'https://acadium.com/resources/analytics-tools'
+              },
+              {
+                title: 'Optimization Playbook',
+                url: 'https://acadium.com/resources/optimization-playbook'
+              }
+            ]
+          }
+        ]
+      }
+    }
+  ];
+
+  return (
+    <div className="space-y-6">
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+        {platformSections.map((section) => (
+          <ClickableCard
+            key={section.id}
+            onClick={() => setActiveOverlay(section.id)}
+            className={`relative overflow-hidden ${
+              theme === 'gradient' ? 'hover:bg-gray-800' : 'hover:bg-gray-50 dark:hover:bg-gray-800'
+            }`}
+          >
+            <div className="p-6">
+              <div className={`inline-flex p-3 rounded-lg bg-${section.color}-100 dark:bg-${section.color}-900/30 text-${section.color}-600 dark:text-${section.color}-400 mb-4`}>
+                {section.icon}
+              </div>
+              <h3 className={`text-xl font-semibold mb-2 ${
+                theme === 'gradient' ? 'text-white' : 'text-gray-900 dark:text-white'
+              }`}>
+                {section.title}
+              </h3>
+              <p className={`text-sm mb-4 ${
+                theme === 'gradient' ? 'text-gray-300' : 'text-gray-600 dark:text-gray-300'
+              }`}>
+                {section.description}
+              </p>
             </div>
-          </Card>
+          </ClickableCard>
         ))}
       </div>
-      
-      <div className="flex justify-end">
-        <Button onClick={() => {}}>
-          Download Platform Growth Strategies
-        </Button>
-      </div>
+
+      {platformSections.map((section) => (
+        <GuideOverlay
+          key={section.id}
+          isOpen={activeOverlay === section.id}
+          onClose={() => setActiveOverlay(null)}
+          title={section.overlayContent.title}
+          description={section.overlayContent.description}
+          sections={section.overlayContent.sections}
+        />
+      ))}
     </div>
   );
 };
 
-const EmpireScalingContent: React.FC = () => {
+const EmpireScalingContent: React.FC<{ activeOverlay: string | null; setActiveOverlay: React.Dispatch<React.SetStateAction<string | null>> }> = ({ activeOverlay, setActiveOverlay }) => {
   const { theme } = useTheme();
-  
-  return (
-    <div className="space-y-6">
-      <h2 className={`text-xl font-bold ${
-        theme === 'gradient' ? 'text-white' : 'text-gray-900 dark:text-white'
-      }`}>
-        Empire Scaling
-      </h2>
-      
-      <p className={`${
-        theme === 'gradient' ? 'text-gray-300' : 'text-gray-600 dark:text-gray-300'
-      }`}>
-        Scale from a single AI influencer to a full portfolio of profitable AI personalities.
-      </p>
-      
-      <div className="space-y-4">
-        {[
+
+  const scalingSections = [
+    {
+      id: 'team-building',
+      title: 'Team Building & Management',
+      description: 'Build and manage a team to scale your AI influencer empire',
+      icon: <Users className="h-6 w-6" />,
+      color: 'purple' as const,
+      overlayContent: {
+        title: 'Team Building Guide',
+        description: 'Learn how to build and manage an effective team for your AI influencer empire',
+        sections: [
           {
-            title: "Multi-Character Management",
-            description: "Efficiently manage multiple AI influencers simultaneously",
-            steps: [
-              "Implement centralized content creation and management systems",
-              "Develop character differentiation strategies to avoid cannibalization",
-              "Create cross-promotion strategies between your AI influencers"
-            ]
-          },
-          {
-            title: "Team Building & Outsourcing",
-            description: "Scale your operation with strategic hiring and outsourcing",
-            steps: [
-              "Identify key roles for outsourcing (content creation, engagement management)",
-              "Create detailed SOPs for all operational processes",
-              "Implement training systems for team members"
-            ]
-          },
-          {
-            title: "Business Entity & Legal Structure",
-            description: "Set up proper business foundations for your AI influencer empire",
-            steps: [
-              "Establish appropriate business entity structure (LLC recommended)",
-              "Implement intellectual property protection strategies",
-              "Set up proper accounting and tax management systems"
-            ]
-          },
-          {
-            title: "Exit Strategy & Valuation",
-            description: "Position your AI influencer business for maximum valuation",
-            steps: [
-              "Develop systems that create business value beyond personal involvement",
-              "Implement proper documentation and reporting for potential acquirers",
-              "Create multiple exit strategy options (full sale, partial sale, licensing)"
+            title: 'Team Structure & Roles',
+            color: 'purple' as const,
+            content: (
+              <div className="space-y-4">
+                <p className={`${theme === 'gradient' ? 'text-gray-300' : 'text-gray-600 dark:text-gray-300'}`}>
+                  Create an efficient team structure to manage multiple AI influencer accounts.
+                </p>
+                <h4 className={`font-semibold ${theme === 'gradient' ? 'text-white' : 'text-gray-900 dark:text-white'}`}>Key Roles:</h4>
+                <ul className={`list-disc pl-6 space-y-2 ${theme === 'gradient' ? 'text-gray-300' : 'text-gray-600 dark:text-gray-300'}`}>
+                  <li>Content Strategy Directors</li>
+                  <li>AI Prompt Engineers</li>
+                  <li>Platform Specialists</li>
+                  <li>Analytics & Growth Managers</li>
+                </ul>
+              </div>
+            ),
+            resources: [
+              {
+                title: 'Team Structure Templates',
+                url: 'https://acadium.com/resources/team-structure'
+              },
+              {
+                title: 'Hiring Guide',
+                url: 'https://acadium.com/resources/hiring-guide'
+              }
             ]
           }
-        ].map((section, index) => (
-          <Card key={index} className={theme === 'gradient' ? 'bg-gray-800/50' : ''}>
-            <h3 className={`text-lg font-semibold mb-2 ${
-              theme === 'gradient' ? 'text-white' : 'text-gray-900 dark:text-white'
-            }`}>
-              {section.title}
-            </h3>
-            <p className={`text-sm mb-4 ${
-              theme === 'gradient' ? 'text-gray-300' : 'text-gray-600 dark:text-gray-300'
-            }`}>
-              {section.description}
-            </p>
-            <div className="space-y-2">
-              {section.steps.map((step, stepIndex) => (
-                <div key={stepIndex} className="flex items-start">
-                  <CheckCircle className="h-5 w-5 text-green-500 mr-2 flex-shrink-0 mt-0.5" />
-                  <span className={`text-sm ${
-                    theme === 'gradient' ? 'text-gray-300' : 'text-gray-600 dark:text-gray-300'
-                  }`}>
-                    {step}
-                  </span>
-                </div>
-              ))}
+        ]
+      }
+    },
+    {
+      id: 'automation-systems',
+      title: 'Advanced Automation Systems',
+      description: 'Implement sophisticated automation for scalable operations',
+      icon: <Zap className="h-6 w-6" />,
+      color: 'yellow' as const,
+      overlayContent: {
+        title: 'Advanced Automation Guide',
+        description: 'Master advanced automation techniques for scaling your AI influencer empire',
+        sections: [
+          {
+            title: 'Automation Architecture',
+            color: 'yellow' as const,
+            content: (
+              <div className="space-y-4">
+                <p className={`${theme === 'gradient' ? 'text-gray-300' : 'text-gray-600 dark:text-gray-300'}`}>
+                  Build sophisticated automation systems to manage multiple AI influencers efficiently.
+                </p>
+                <h4 className={`font-semibold ${theme === 'gradient' ? 'text-white' : 'text-gray-900 dark:text-white'}`}>Key Components:</h4>
+                <ul className={`list-disc pl-6 space-y-2 ${theme === 'gradient' ? 'text-gray-300' : 'text-gray-600 dark:text-gray-300'}`}>
+                  <li>Content Generation Pipelines</li>
+                  <li>Cross-Platform Publishing Systems</li>
+                  <li>Engagement Automation</li>
+                  <li>Performance Monitoring</li>
+                </ul>
+              </div>
+            ),
+            resources: [
+              {
+                title: 'Automation Playbook',
+                url: 'https://acadium.com/resources/automation-playbook'
+              },
+              {
+                title: 'Tool Integration Guide',
+                url: 'https://acadium.com/resources/tool-integration'
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      id: 'brand-partnerships',
+      title: 'Brand Partnerships & Monetization',
+      description: 'Scale revenue through strategic partnerships and diverse income streams',
+      icon: <DollarSign className="h-6 w-6" />,
+      color: 'green' as const,
+      overlayContent: {
+        title: 'Partnership & Monetization Guide',
+        description: 'Learn how to build profitable brand partnerships and diversify revenue streams',
+        sections: [
+          {
+            title: 'Partnership Strategy',
+            color: 'green' as const,
+            content: (
+              <div className="space-y-4">
+                <p className={`${theme === 'gradient' ? 'text-gray-300' : 'text-gray-600 dark:text-gray-300'}`}>
+                  Develop strategic partnerships and multiple revenue streams for sustainable growth.
+                </p>
+                <h4 className={`font-semibold ${theme === 'gradient' ? 'text-white' : 'text-gray-900 dark:text-white'}`}>Revenue Channels:</h4>
+                <ul className={`list-disc pl-6 space-y-2 ${theme === 'gradient' ? 'text-gray-300' : 'text-gray-600 dark:text-gray-300'}`}>
+                  <li>Brand Collaborations</li>
+                  <li>Affiliate Marketing</li>
+                  <li>Digital Products</li>
+                  <li>Consulting Services</li>
+                </ul>
+              </div>
+            ),
+            resources: [
+              {
+                title: 'Partnership Guide',
+                url: 'https://acadium.com/resources/partnership-guide'
+              },
+              {
+                title: 'Revenue Optimization',
+                url: 'https://acadium.com/resources/revenue-optimization'
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      id: 'growth-strategy',
+      title: 'Growth Strategy & Expansion',
+      description: 'Plan and execute strategic growth initiatives',
+      icon: <TrendingUp className="h-6 w-6" />,
+      color: 'blue' as const,
+      overlayContent: {
+        title: 'Growth Strategy Guide',
+        description: 'Master the art of strategic growth and market expansion',
+        sections: [
+          {
+            title: 'Growth Framework',
+            color: 'blue' as const,
+            content: (
+              <div className="space-y-4">
+                <p className={`${theme === 'gradient' ? 'text-gray-300' : 'text-gray-600 dark:text-gray-300'}`}>
+                  Develop and implement strategic growth initiatives for your AI influencer empire.
+                </p>
+                <h4 className={`font-semibold ${theme === 'gradient' ? 'text-white' : 'text-gray-900 dark:text-white'}`}>Growth Areas:</h4>
+                <ul className={`list-disc pl-6 space-y-2 ${theme === 'gradient' ? 'text-gray-300' : 'text-gray-600 dark:text-gray-300'}`}>
+                  <li>Market Expansion</li>
+                  <li>New Platform Integration</li>
+                  <li>Product Line Development</li>
+                  <li>Community Building</li>
+                </ul>
+              </div>
+            ),
+            resources: [
+              {
+                title: 'Growth Strategy Playbook',
+                url: 'https://acadium.com/resources/growth-strategy'
+              },
+              {
+                title: 'Market Analysis Guide',
+                url: 'https://acadium.com/resources/market-analysis'
+              }
+            ]
+          }
+        ]
+      }
+    }
+  ];
+
+  return (
+    <div className="space-y-6">
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+        {scalingSections.map((section) => (
+          <ClickableCard
+            key={section.id}
+            onClick={() => setActiveOverlay(section.id)}
+            className={`relative overflow-hidden ${
+              theme === 'gradient' ? 'hover:bg-gray-800' : 'hover:bg-gray-50 dark:hover:bg-gray-800'
+            }`}
+          >
+            <div className="p-6">
+              <div className={`inline-flex p-3 rounded-lg bg-${section.color}-100 dark:bg-${section.color}-900/30 text-${section.color}-600 dark:text-${section.color}-400 mb-4`}>
+                {section.icon}
+              </div>
+              <h3 className={`text-xl font-semibold mb-2 ${
+                theme === 'gradient' ? 'text-white' : 'text-gray-900 dark:text-white'
+              }`}>
+                {section.title}
+              </h3>
+              <p className={theme === 'gradient' ? 'text-gray-300' : 'text-gray-600 dark:text-gray-300'}>
+                {section.description}
+              </p>
             </div>
-          </Card>
+          </ClickableCard>
         ))}
       </div>
-      
-      <div className="flex justify-end">
-        <Button onClick={() => {}}>
-          Download Empire Scaling Roadmap
-        </Button>
-      </div>
+
+      {scalingSections.map((section) => (
+        <GuideOverlay
+          key={section.id}
+          isOpen={activeOverlay === section.id}
+          onClose={() => setActiveOverlay(null)}
+          title={section.overlayContent.title}
+          description={section.overlayContent.description}
+          sections={section.overlayContent.sections}
+        />
+      ))}
     </div>
   );
 };
