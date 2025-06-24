@@ -29,11 +29,13 @@ const Dashboard: React.FC = () => {
     const urlParams = new URLSearchParams(location.search);
     const success = urlParams.get('success');
     const canceled = urlParams.get('canceled');
+    const fromOnboarding = urlParams.get('from_onboarding');
 
     if (success === 'true') {
       setShowSuccessMessage(true);
-      // Clean the URL by removing the search parameters
-      navigate('/', { replace: true });
+      // Clean the URL but preserve the onboarding flag if present
+      const newUrl = fromOnboarding ? '/?from_onboarding=true' : '/';
+      navigate(newUrl, { replace: true });
       
       // Hide success message after 5 seconds
       setTimeout(() => {
@@ -186,11 +188,6 @@ const Dashboard: React.FC = () => {
           to="/challenges"
           gradient="from-yellow-500 to-orange-600"
         />
-      </div>
-
-      {/* Bolt Button */}
-      <div className="flex justify-end">
-        <a id="bolt-button" href="https://bolt.new" target="_blank" title="Powered By Bolt"></a>
       </div>
     </div>
   );
