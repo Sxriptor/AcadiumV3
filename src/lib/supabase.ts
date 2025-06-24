@@ -1,4 +1,5 @@
 import { createClient } from '@supabase/supabase-js';
+import { guestMode } from './guestMode';
 
 const supabaseUrl = 'https://kpacxfxggoutavjfqvbh.supabase.co';
 const supabaseAnonKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImtwYWN4ZnhnZ291dGF2amZxdmJoIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDkwMTUzODMsImV4cCI6MjA2NDU5MTM4M30.9_hhdIXGsszv9WA7CtW4p3zYuhNEOU5ItRSobt0dT-4';
@@ -21,6 +22,7 @@ export type UserProfile = {
   skill_level: 'beginner' | 'intermediate' | 'pro';
   focus: 'ai-automation' | 'web-dev' | 'ai-video' | 'explore' | 'advanced';
   referral?: string;
+  avatar_url?: string;
   onboarding_completed: boolean;
   created_at: string;
   updated_at: string;
@@ -163,13 +165,24 @@ export const authCache = {
 
   // Method to check if we have valid cached data
   hasValidSession: (): boolean => {
+    // Check guest mode first
+    if (guestMode.isGuestMode()) {
+      return true;
+    }
+    
     const user = authCache.getUser();
     return !!user;
   }
 };
 
-// Enhanced auth functions with improved caching
+// Enhanced auth functions with guest mode support
 export const getCachedUser = async () => {
+  // Check guest mode first
+  if (guestMode.isGuestMode()) {
+    const guestUser = guestMode.getGuestUser();
+    return { data: { user: guestUser }, error: null };
+  }
+  
   // First check cache
   const cachedUser = authCache.getUser();
   if (cachedUser) {
@@ -186,6 +199,12 @@ export const getCachedUser = async () => {
 };
 
 export const getCachedProfile = async (userId: string) => {
+  // Check guest mode first
+  if (guestMode.isGuestMode()) {
+    const guestProfile = guestMode.getGuestProfile();
+    return { data: guestProfile, error: null };
+  }
+  
   // First check cache
   const cachedProfile = authCache.getProfile(userId);
   if (cachedProfile) {
@@ -207,6 +226,12 @@ export const getCachedProfile = async (userId: string) => {
 };
 
 export const getCachedSubscription = async (userId: string) => {
+  // Check guest mode first
+  if (guestMode.isGuestMode()) {
+    const guestSubscription = guestMode.getGuestSubscription();
+    return { data: guestSubscription, error: null };
+  }
+  
   // First check cache
   const cachedSubscription = authCache.getSubscription(userId);
   if (cachedSubscription) {
@@ -233,12 +258,27 @@ export const getCachedSubscription = async (userId: string) => {
   return { data, error };
 };
 
-// Session management utilities
+// Session management utilities with guest mode support
 export const sessionManager = {
   // Initialize session from storage on app start
   initializeSession: async () => {
     try {
-      // Supabase automatically handles session restoration from localStorage
+      // Check guest mode first
+      if (guestMode.isGuestMode()) {
+        const guestUser = guestMode.getGuestUser();
+        return guestUser;
+      }
+      
+      // Check if we have a valid cached session
+      if (authCache.hasValidSession()) {
+        const cachedUser = authCache.getUser();
+        if (cachedUser) {
+          console.log('Found cached user, redirecting...');
+          return cachedUser;
+        }
+      }
+
+      // If no cached session, try to initialize from Supabase
       const { data: { session } } = await supabase.auth.getSession();
       
       if (session?.user) {
@@ -256,6 +296,11 @@ export const sessionManager = {
 
   // Clear all session data
   clearSession: () => {
+    // Clear guest mode if active
+    if (guestMode.isGuestMode()) {
+      guestMode.disableGuestMode();
+    }
+    
     authCache.clear();
     // Supabase will handle clearing its own session storage
   },
@@ -263,6 +308,11 @@ export const sessionManager = {
   // Refresh session and update cache
   refreshSession: async () => {
     try {
+      // Guest mode doesn't need refresh
+      if (guestMode.isGuestMode()) {
+        return guestMode.getGuestUser();
+      }
+      
       const { data: { session }, error } = await supabase.auth.refreshSession();
       
       if (session?.user && !error) {
@@ -282,6 +332,11 @@ export const sessionManager = {
 export const setupAuthListener = (callback: (user: any) => void) => {
   const { data: { subscription } } = supabase.auth.onAuthStateChange(async (event, session) => {
     console.log('Auth state changed:', event, session?.user?.id);
+    
+    // Don't process auth changes if in guest mode
+    if (guestMode.isGuestMode()) {
+      return;
+    }
     
     switch (event) {
       case 'SIGNED_IN':
