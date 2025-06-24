@@ -1,12 +1,14 @@
 import React, { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useSearchParams } from 'react-router-dom';
 import { Card } from '../components/ui/Card';
 import { Button } from '../components/ui/Button';
 import { supabase } from '../lib/supabase';
+import { guestMode } from '../lib/guestMode';
 import { Rocket, Brain, Briefcase, Globe, ArrowRight, Circle, X, Bot, Code, Video, Search, User, Camera, Upload, Zap } from 'lucide-react';
 import { FloatingThemeToggle } from '../components/ui/FloatingThemeToggle';
 import { FloatingBackButton } from '../components/ui/FloatingBackButton';
 import { useTheme } from '../components/ui/ThemeProvider';
+import { markFromOnboarding } from '../utils/hintUtils';
 
 type Mission = 'ai-automation' | 'web-dev' | 'ai-video' | 'explore' | 'advanced';
 type SkillLevel = 'beginner' | 'intermediate' | 'pro';
@@ -29,6 +31,10 @@ const Onboarding: React.FC = () => {
   const [error, setError] = useState<string | null>(null);
   const navigate = useNavigate();
   const { theme } = useTheme();
+  const [searchParams] = useSearchParams();
+  
+  // Check if we're in guest mode
+  const isGuestMode = searchParams.get('guest') === 'true' || guestMode.isGuestMode();
 
   const handleFocusSelect = (focus: Focus) => {
     setData({ ...data, focus, mission: focus }); // Set both focus and mission to the same value
@@ -59,6 +65,18 @@ const Onboarding: React.FC = () => {
         return;
       }
 
+      // In guest mode, convert to base64 and store locally
+      if (isGuestMode) {
+        const reader = new FileReader();
+        reader.onload = (e) => {
+          const result = e.target?.result as string;
+          setData(prev => ({ ...prev, avatarUrl: result }));
+        };
+        reader.readAsDataURL(file);
+        return;
+      }
+
+      // For regular users, upload to Supabase
       const { data: { user } } = await supabase.auth.getUser();
       if (!user) return;
 
@@ -116,35 +134,78 @@ const Onboarding: React.FC = () => {
     setError(null);
     
     try {
-      const { data: { user } } = await supabase.auth.getUser();
-      
-      if (!user) {
-        navigate('/auth');
-        return;
-      }
-
-      const { error: profileError } = await supabase
-        .from('profiles')
-        .insert({
-          user_id: user.id,
+      if (isGuestMode) {
+        // Handle guest mode completion
+        const guestProfile = guestMode.createGuestProfile({
           full_name: data.fullName,
-          mission: data.focus, // Use focus value for mission
+          mission: data.focus,
           skill_level: data.skillLevel,
           focus: data.focus,
           referral: data.referral,
-          avatar_url: data.avatarUrl,
-          onboarding_completed: true
+          avatar_url: data.avatarUrl
         });
 
-      if (profileError) throw profileError;
+        // Set flag for onboarding completion
+        localStorage.setItem('acadium_guest_onboarding_complete', 'true');
+        
+        // Set onboarding flag to trigger hints
+        markFromOnboarding();
+    
+        // Navigate directly to dashboard with onboarding flag
+        const redirectPath = getGuestRedirectPath(data.focus || 'explore');
+        navigate(`${redirectPath}?from_onboarding=true`);
+      } else {
+        // Handle regular user completion
+        const { data: { user } } = await supabase.auth.getUser();
+        
+        if (!user) {
+          navigate('/auth');
+          return;
+        }
 
-      // Navigate to payment page with onboarding context
-      navigate('/payment?from=onboarding');
+        const { error: profileError } = await supabase
+          .from('profiles')
+          .insert({
+            user_id: user.id,
+            full_name: data.fullName,
+            mission: data.focus, // Use focus value for mission
+            skill_level: data.skillLevel,
+            focus: data.focus,
+            referral: data.referral,
+            avatar_url: data.avatarUrl,
+            onboarding_completed: true
+          });
+
+        if (profileError) throw profileError;
+
+        // Set onboarding flag to trigger hints after payment
+        markFromOnboarding();
+
+        // Navigate to payment page with both onboarding and payment flags
+        navigate('/payment?from=onboarding&from_onboarding=true');
+      }
     } catch (error) {
       console.error('Error saving onboarding data:', error);
-      setError('Failed to save your preferences. Please try again.');
+      setError('Failed to complete onboarding. Please try again.');
     } finally {
       setLoading(false);
+    }
+  };
+
+  // Get redirect path for guest users
+  const getGuestRedirectPath = (focus: Focus): string => {
+    switch (focus) {
+      case 'ai-automation':
+        return '/n8n';
+      case 'ai-video':
+        return '/video';
+      case 'web-dev':
+        return '/webdev';
+      case 'advanced':
+        return '/advanced';
+      case 'explore':
+      default:
+        return '/';
     }
   };
 
@@ -188,10 +249,13 @@ const Onboarding: React.FC = () => {
           <div className="space-y-8">
             <div className="text-center">
               <h1 className="text-3xl font-bold text-gray-900 dark:text-white mb-3">
-                Welcome to Acadium - AI
+                {isGuestMode ? 'Welcome, Guest!' : 'Welcome to Acadium - AI'}
               </h1>
               <p className="text-lg text-gray-600 dark:text-gray-300">
-                This is where misfits become moguls.
+                {isGuestMode 
+                  ? 'Choose your focus area to get started'
+                  : 'This is where misfits become moguls.'
+                }
               </p>
             </div>
 
@@ -344,6 +408,7 @@ const Onboarding: React.FC = () => {
                   type="text"
                   name="fullName"
                   required
+                  defaultValue={isGuestMode ? 'Guest User' : ''}
                   className="w-full px-4 py-2 rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-800 text-gray-900 dark:text-white"
                 />
               </div>
@@ -374,10 +439,13 @@ const Onboarding: React.FC = () => {
           <div className="space-y-8">
             <div className="text-center">
               <h2 className="text-2xl font-bold text-gray-900 dark:text-white mb-3">
-                You're about to enter a different internet.
+                {isGuestMode ? "You're ready to explore!" : "You're about to enter a different internet."}
               </h2>
               <p className="text-gray-600 dark:text-gray-300">
-                Create your account to unlock:
+                {isGuestMode 
+                  ? 'Your guest account is ready with full access to:'
+                  : 'Create your account to unlock:'
+                }
               </p>
             </div>
 
@@ -398,6 +466,17 @@ const Onboarding: React.FC = () => {
               ))}
             </div>
 
+            {isGuestMode && (
+              <div className="p-4 bg-yellow-50 dark:bg-yellow-900/20 rounded-lg border border-yellow-200 dark:border-yellow-800">
+                <h4 className="text-sm font-medium text-yellow-900 dark:text-yellow-100 mb-2">
+                  📝 Guest Mode Note
+                </h4>
+                <p className="text-xs text-yellow-700 dark:text-yellow-200">
+                  Your progress will be saved locally in your browser. Sign up anytime to sync your data across devices.
+                </p>
+              </div>
+            )}
+
             {error && (
               <div className="p-4 bg-red-50 dark:bg-red-900/30 text-red-600 dark:text-red-400 rounded-lg">
                 {error}
@@ -409,7 +488,10 @@ const Onboarding: React.FC = () => {
               onClick={handleComplete}
               disabled={loading}
             >
-              {loading ? 'Creating Account...' : 'Create My Account →'}
+              {loading 
+                ? (isGuestMode ? 'Setting up...' : 'Creating Account...') 
+                : (isGuestMode ? 'Start Exploring →' : 'Create My Account →')
+              }
             </button>
           </div>
         );
