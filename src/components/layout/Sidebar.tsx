@@ -41,6 +41,7 @@ import { useTheme } from '../ui/ThemeProvider';
 import { useFavorites } from '../../hooks/useFavorites';
 import { useRecentPages } from '../../hooks/useRecentPages';
 import { supabase, getCachedUser, getCachedProfile } from '../../lib/supabase';
+import { guestMode } from '../../lib/guestMode';
 
 interface NavItemProps {
   to: string;
@@ -330,6 +331,7 @@ const getFavoritesRecentIcon = (iconName: string, pagePath: string): React.React
 interface SidebarProps {
   collapsed: boolean;
   onToggle: () => void;
+  onMobileClose?: () => void;
   className?: string;
 }
 
@@ -381,7 +383,12 @@ const ConfirmationModal: React.FC<{
   );
 };
 
-export const Sidebar: React.FC<SidebarProps> = ({ collapsed, onToggle, className = '' }) => {
+export const Sidebar: React.FC<SidebarProps> = ({ 
+  collapsed, 
+  onToggle, 
+  onMobileClose,
+  className = '' 
+}) => {
   const { theme } = useTheme();
   const { favorites, loading: favoritesLoading, clearAllFavorites } = useFavorites();
   const { recentPages, loading: recentLoading, clearAllRecent } = useRecentPages();
@@ -414,6 +421,16 @@ export const Sidebar: React.FC<SidebarProps> = ({ collapsed, onToggle, className
   useEffect(() => {
     const fetchUserFocus = async () => {
       try {
+        // Check if we're in guest mode first
+        if (guestMode.isGuestMode()) {
+          const guestProfile = guestMode.getGuestProfile();
+          if (guestProfile?.focus) {
+            setUserFocus(guestProfile.focus);
+          }
+          return;
+        }
+
+        // Handle regular users
         const { data: { user } } = await getCachedUser();
         if (!user) return;
 
@@ -528,11 +545,11 @@ export const Sidebar: React.FC<SidebarProps> = ({ collapsed, onToggle, className
             external: false
           },
           {
-            to: "/n8n/network",
-            icon: <Globe />,
+            to: "https://discord.gg/RKRvQAzPCJ",
+            icon: <MessageSquare />,
             label: "Community",
             subItems: [],
-            external: false
+            external: true
           }
         ];
 
@@ -567,11 +584,11 @@ export const Sidebar: React.FC<SidebarProps> = ({ collapsed, onToggle, className
             external: false
           },
           {
-            to: "/video/network",
-            icon: <Globe />,
+            to: "https://discord.gg/RKRvQAzPCJ",
+            icon: <MessageSquare />,
             label: "Community",
             subItems: [],
-            external: false
+            external: true
           }
         ];
 
@@ -606,11 +623,11 @@ export const Sidebar: React.FC<SidebarProps> = ({ collapsed, onToggle, className
             external: false
           },
           {
-            to: "/webdev/network",
-            icon: <Globe />,
+            to: "https://discord.gg/RKRvQAzPCJ",
+            icon: <MessageSquare />,
             label: "Community",
             subItems: [],
-            external: false
+            external: true
           }
         ];
 
@@ -679,14 +696,15 @@ export const Sidebar: React.FC<SidebarProps> = ({ collapsed, onToggle, className
   return (
     <>
       <aside 
-        key={refreshKey} // Force re-render when data updates
+        key={refreshKey}
+        data-hint="sidebar"
         className={`
-          fixed left-0 top-0 bottom-0 z-20
+          fixed left-0 top-0 bottom-0 z-40
           flex flex-col
           transition-all duration-300 ease-in-out
           ${theme === 'gradient'
             ? 'bg-gray-900/80 backdrop-blur-md border-r border-gray-700'
-            : 'bg-white/80 dark:bg-black backdrop-blur-md border-r border-gray-200 dark:border-gray-800'
+            : 'bg-white/80 dark:bg-black/80 backdrop-blur-md border-r border-gray-200 dark:border-gray-800'
           }
           ${collapsed ? 'w-16' : 'w-64'}
           ${className}
@@ -716,16 +734,31 @@ export const Sidebar: React.FC<SidebarProps> = ({ collapsed, onToggle, className
               />
             </Link>
           )}
-          <button 
-            onClick={onToggle}
-            className={`ml-auto p-1.5 rounded-lg transition-colors ${
-              theme === 'gradient'
-                ? 'text-gray-300 hover:text-white hover:bg-gray-700/50'
-                : 'text-gray-500 hover:text-gray-900 dark:text-gray-400 dark:hover:text-white hover:bg-gray-100 dark:hover:bg-gray-800'
-            }`}
-          >
-            {collapsed ? <Menu size={18} /> : <X size={18} />}
-          </button>
+          <div className="flex items-center ml-auto">
+            {/* Mobile Close Button */}
+            <button
+              onClick={onMobileClose}
+              className={`lg:hidden p-1.5 rounded-lg mr-2 transition-colors ${
+                theme === 'gradient'
+                  ? 'text-gray-300 hover:text-white hover:bg-gray-700/50'
+                  : 'text-gray-500 hover:text-gray-900 dark:text-gray-400 dark:hover:text-white hover:bg-gray-100 dark:hover:bg-gray-800'
+              }`}
+            >
+              <X className="h-5 w-5" />
+            </button>
+            {/* Desktop Toggle Button */}
+            <button 
+              onClick={onToggle}
+              data-hint="sidebar-toggle"
+              className={`hidden lg:block p-1.5 rounded-lg transition-colors ${
+                theme === 'gradient'
+                  ? 'text-gray-300 hover:text-white hover:bg-gray-700/50'
+                  : 'text-gray-500 hover:text-gray-900 dark:text-gray-400 dark:hover:text-white hover:bg-gray-100 dark:hover:bg-gray-800'
+              }`}
+            >
+              {collapsed ? <ChevronRight className="h-5 w-5" /> : <Menu className="h-5 w-5" />}
+            </button>
+          </div>
         </div>
 
         <div className="flex-1 overflow-y-auto py-4 px-3">
@@ -748,7 +781,7 @@ export const Sidebar: React.FC<SidebarProps> = ({ collapsed, onToggle, className
 
             {/* Favorites Section */}
             {!favoritesLoading && favorites.length > 0 && (
-              <>
+              <div data-hint="favorites">
                 {!collapsed && (
                   <div className={`mb-2 px-3 flex items-center justify-between ${
                     theme === 'gradient' ? 'text-gray-400' : 'text-gray-500 dark:text-gray-400'
@@ -793,12 +826,12 @@ export const Sidebar: React.FC<SidebarProps> = ({ collapsed, onToggle, className
                 <div className={`my-4 ${
                   theme === 'gradient' ? 'border-t border-gray-700' : 'border-t border-gray-200 dark:border-gray-700'
                 }`} />
-              </>
+              </div>
             )}
 
             {/* Recent Opened Section */}
             {!recentLoading && recentPages.length > 0 && (
-              <>
+              <div data-hint="recent">
                 {!collapsed && (
                   <div className={`mb-2 px-3 flex items-center justify-between ${
                     theme === 'gradient' ? 'text-gray-400' : 'text-gray-500 dark:text-gray-400'
@@ -839,7 +872,7 @@ export const Sidebar: React.FC<SidebarProps> = ({ collapsed, onToggle, className
                     )}
                   </NavLink>
                 ))}
-              </>
+              </div>
             )}
           </div>
         </div>
@@ -847,7 +880,7 @@ export const Sidebar: React.FC<SidebarProps> = ({ collapsed, onToggle, className
         {/* Settings at the bottom */}
         <div className={`px-3 py-4 ${
           theme === 'gradient' ? 'border-t border-gray-700' : 'border-t border-gray-200 dark:border-gray-800'
-        }`}>
+        }`} data-hint="settings">
           <NavItem
             to="/settings"
             icon={<SettingsIcon />}
