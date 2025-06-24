@@ -11,13 +11,31 @@ import { getPageInfo } from '../../utils/pageConfig';
 export const Layout: React.FC = () => {
   const [sidebarCollapsed, setSidebarCollapsed] = useState(false);
   const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const closeTimeoutRef = useRef<NodeJS.Timeout | null>(null);
   const { theme, gradientType } = useTheme();
   const location = useLocation();
   const { isFavorite, addToFavorites, removeFromFavorites } = useFavorites();
   const { addToRecent } = useRecentPages();
 
-  const toggleSidebar = () => setSidebarCollapsed(!sidebarCollapsed);
+  const toggleSidebar = () => {
+    setSidebarCollapsed(!sidebarCollapsed);
+    setIsMobileMenuOpen(false);
+  };
+
+  const expandSidebar = () => {
+    setSidebarCollapsed(false);
+    setIsMobileMenuOpen(true);
+  };
+
+  const toggleMobileMenu = () => {
+    setIsMobileMenuOpen(!isMobileMenuOpen);
+  };
+
+  // Close mobile menu on location change
+  useEffect(() => {
+    setIsMobileMenuOpen(false);
+  }, [location]);
 
   // Track page visits for recent pages
   useEffect(() => {
@@ -174,24 +192,51 @@ export const Layout: React.FC = () => {
       }`}
       style={theme === 'gradient' ? { background: 'var(--gradient-bg)' } : {}}
     >
-      <Sidebar collapsed={sidebarCollapsed} onToggle={toggleSidebar} />
-      <Header sidebarCollapsed={sidebarCollapsed} />
+      {/* Mobile Menu Overlay */}
+      <div 
+        className={`fixed inset-0 bg-black/50 z-30 lg:hidden transition-opacity duration-300 ${
+          isMobileMenuOpen ? 'opacity-100' : 'opacity-0 pointer-events-none'
+        }`}
+        onClick={toggleMobileMenu}
+      />
+
+      {/* Sidebar - Hidden on mobile by default */}
+      <div className={`
+        fixed left-0 top-0 bottom-0 z-40
+        lg:block
+        ${isMobileMenuOpen ? 'block' : 'hidden'}
+      `}>
+        <Sidebar 
+          collapsed={sidebarCollapsed} 
+          onToggle={toggleSidebar}
+          onMobileClose={toggleMobileMenu}
+          className={`transition-all duration-300 ease-in-out`}
+        />
+      </div>
+
+      {/* Header with mobile menu button */}
+      <Header 
+        sidebarCollapsed={sidebarCollapsed} 
+        onMobileMenuToggle={toggleMobileMenu}
+        isMobileMenuOpen={isMobileMenuOpen}
+        onExpandSidebar={expandSidebar}
+      />
       
       <main 
         className={`
           fixed top-16 bottom-0 right-0 overflow-hidden
           transition-all duration-300 ease-in-out
-          ${sidebarCollapsed ? 'left-16' : 'left-64'}
+          ${sidebarCollapsed ? 'lg:left-16 left-0' : 'lg:left-64 left-0'}
           ${theme === 'gradient' ? 'bg-transparent' : 'bg-gray-50 dark:bg-black'}
         `}
       >
-        <div className="h-full overflow-y-auto px-4 md:px-6 lg:px-8">
+        <div className="h-full overflow-y-auto px-4 md:px-6 lg:px-8 pb-20 lg:pb-8">
           <Outlet />
         </div>
       </main>
       
-      {/* Floating Action Menu */}
-      <div className="fixed bottom-6 right-6 z-10">
+      {/* Floating Action Menu - Adjusted for mobile */}
+      <div className="fixed bottom-6 right-6 z-40" data-hint="floating-action">
         <div 
           className="relative"
           onMouseEnter={handleMouseEnter}
