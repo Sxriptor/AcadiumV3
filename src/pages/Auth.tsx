@@ -1,9 +1,10 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
 import { supabase, authCache, sessionManager, getCachedProfile } from '../lib/supabase';
+import { guestMode } from '../lib/guestMode';
 import { Card } from '../components/ui/Card';
 import { Button } from '../components/ui/Button';
-import { Mail, Lock, Circle, X } from 'lucide-react';
+import { Mail, Lock, Circle, X, UserCheck } from 'lucide-react';
 import { FloatingThemeToggle } from '../components/ui/FloatingThemeToggle';
 import { useTheme } from '../components/ui/ThemeProvider';
 
@@ -13,6 +14,7 @@ const Auth: React.FC = () => {
   const [password, setPassword] = useState('');
   const [acceptedTerms, setAcceptedTerms] = useState(false);
   const [loading, setLoading] = useState(false);
+  const [guestLoading, setGuestLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [initializing, setInitializing] = useState(true);
   const navigate = useNavigate();
@@ -42,6 +44,25 @@ const Auth: React.FC = () => {
     } catch (error) {
       console.error('Error getting user focus for redirect:', error);
       return '/'; // default to index on error
+    }
+  };
+
+  // Handle guest mode login
+  const handleGuestMode = async () => {
+    setGuestLoading(true);
+    setError(null);
+
+    try {
+      // Enable guest mode
+      guestMode.enableGuestMode();
+      
+      // Navigate to onboarding to set up guest profile
+      navigate('/onboarding?guest=true');
+    } catch (error) {
+      console.error('Error entering guest mode:', error);
+      setError('Failed to enter guest mode. Please try again.');
+    } finally {
+      setGuestLoading(false);
     }
   };
 
@@ -279,6 +300,28 @@ const Auth: React.FC = () => {
               {loading ? 'Loading...' : (isSignUp ? 'Sign Up' : 'Sign In')}
             </Button>
 
+            {/* Guest Mode Button */}
+            <div className="relative">
+              <div className="absolute inset-0 flex items-center">
+                <div className="w-full border-t border-gray-300 dark:border-gray-600" />
+              </div>
+              <div className="relative flex justify-center text-sm">
+                <span className="px-2 bg-white dark:bg-gray-900 text-gray-500 dark:text-gray-400">
+                  or
+                </span>
+              </div>
+            </div>
+
+            <Button
+              type="button"
+              onClick={handleGuestMode}
+              disabled={guestLoading}
+              className="w-full bg-gray-100 hover:bg-gray-200 dark:bg-gray-800 text-black dark:text-gray-300 border border-gray-300 dark:border-gray-600 hover:border-gray-400 dark:hover:bg-gray-700 transition-all duration-200 flex items-center justify-center"
+            >
+              <UserCheck className="h-5 w-5 mr-2" />
+              {guestLoading ? 'Starting Guest Mode...' : 'Try as Guest'}
+            </Button>
+
             <div className="text-center">
               <button
                 type="button"
@@ -295,6 +338,16 @@ const Auth: React.FC = () => {
               </button>
             </div>
           </form>
+
+          {/* Guest Mode Info */}
+          <div className="mt-6 p-4 bg-gray-100 dark:bg-gray-800/20 rounded-lg border border-gray-300 dark:border-gray-800">
+            <h4 className="text-sm font-medium text-gray-900 dark:text-gray-100 mb-2">
+              👤 Guest Mode
+            </h4>
+            <p className="text-xs text-gray-700 dark:text-gray-200">
+              Try the full platform without creating an account. Your progress will be saved locally in your browser.
+            </p>
+          </div>
         </div>
       </Card>
         </main>
