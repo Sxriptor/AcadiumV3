@@ -1,5 +1,6 @@
 import { useState, useEffect, useCallback } from 'react';
 import { supabase } from '../lib/supabase';
+import { guestMode } from '../lib/guestMode';
 
 export interface OverallProgress {
   totalSteps: number;
@@ -129,11 +130,6 @@ export const useOverallProgress = (userFocus: 'ai-automation' | 'web-dev' | 'ai-
       setLoading(true);
       setError(null);
 
-      const { data: { user } } = await supabase.auth.getUser();
-      if (!user) {
-        throw new Error('User not authenticated');
-      }
-
       // For explore users, return 0 progress
       if (userFocus === 'explore') {
         setProgress({ totalSteps: 0, completedSteps: 0, percentage: 0 });
@@ -152,18 +148,34 @@ export const useOverallProgress = (userFocus: 'ai-automation' | 'web-dev' | 'ai-
       // Calculate total steps from our predefined step list
       const totalSteps = stepIds.length;
 
-      // Fetch only completed steps for this focus area
-      const { data: completedStepsData, error } = await supabase
-        .from('user_learning_progress')
-        .select('step_id')
-        .eq('user_id', user.id)
-        .eq('completed', true)
-        .in('step_id', stepIds);
+      let completedSteps = 0;
 
-      if (error) throw error;
+      if (guestMode.isGuestMode()) {
+        // Get completed steps from guest mode storage
+        const guestProgress = guestMode.getGuestProgress();
+        completedSteps = stepIds.filter(stepId => {
+          // Look for the step in any tool's progress
+          return Object.values(guestProgress).some(toolProgress => 
+            toolProgress[stepId]?.completed
+          );
+        }).length;
+      } else {
+        // Get completed steps from database for logged-in users
+        const { data: { user } } = await supabase.auth.getUser();
+        if (!user) {
+          throw new Error('User not authenticated');
+        }
 
-      // Count completed steps
-      const completedSteps = completedStepsData?.length || 0;
+        const { data: completedStepsData, error } = await supabase
+          .from('user_learning_progress')
+          .select('step_id')
+          .eq('user_id', user.id)
+          .eq('completed', true)
+          .in('step_id', stepIds);
+
+        if (error) throw error;
+        completedSteps = completedStepsData?.length || 0;
+      }
       
       const percentage = totalSteps > 0 ? Math.round((completedSteps / totalSteps) * 100) : 0;
 
@@ -172,7 +184,7 @@ export const useOverallProgress = (userFocus: 'ai-automation' | 'web-dev' | 'ai-
         completedSteps,
         percentage,
         stepIds: stepIds.length,
-        completedStepsData: completedStepsData?.length
+        mode: guestMode.isGuestMode() ? 'guest' : 'authenticated'
       });
 
       setProgress({
