@@ -41,45 +41,54 @@ export const MiniAppSwitcher: React.FC<MiniAppSwitcherProps> = ({
   };
 
   return (
-    <div className={`flex items-center space-x-2 p-1 rounded-lg ${
-      theme === 'gradient'
-        ? 'bg-gray-800/50'
-        : 'bg-gray-100 dark:bg-gray-800'
-    }`}>
-      {apps.map((app) => (
-        <button
-          key={app.id}
-          onClick={() => onAppChange(app.id)}
-          className={`
-            flex items-center space-x-2 px-3 py-2 rounded-md text-sm font-medium
-            transition-all duration-200 relative
-            ${activeApp === app.id
-              ? 'bg-white dark:bg-gray-700 shadow-sm text-gray-900 dark:text-white'
-              : theme === 'gradient'
-                ? 'text-gray-300 hover:text-white hover:bg-gray-700/50'
-                : 'text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white hover:bg-gray-200 dark:hover:bg-gray-700'
-            }
-          `}
-        >
-          <span className="text-lg">{app.icon}</span>
-          <span>{app.name}</span>
-          {/* Completion status dot */}
-          <div className="relative">
-            <div className={`w-2 h-2 rounded-full ${getCompletionColor(app.id)} flex-shrink-0`}></div>
-            {/* Tooltip with percentage */}
-            <div className={`absolute bottom-full left-1/2 transform -translate-x-1/2 mb-2 px-2 py-1 text-xs rounded shadow-lg opacity-0 hover:opacity-100 transition-opacity duration-200 pointer-events-none z-10 whitespace-nowrap ${
-              theme === 'gradient' 
-                ? 'bg-gray-900 text-white border border-gray-700' 
-                : 'bg-gray-900 text-white'
-            }`}>
-              {getCompletionPercentage(app.id)}% complete
-              <div className={`absolute top-full left-1/2 transform -translate-x-1/2 w-0 h-0 border-l-2 border-r-2 border-t-2 border-transparent ${
-                theme === 'gradient' ? 'border-t-gray-900' : 'border-t-gray-900'
-              }`}></div>
-            </div>
-          </div>
-        </button>
-      ))}
+    <div className="relative">
+      {/* Fade indicators for scroll */}
+      <div className="absolute left-0 top-0 bottom-0 w-8 bg-gradient-to-r from-gray-50 to-transparent dark:from-gray-900 pointer-events-none z-10 md:hidden"></div>
+      <div className="absolute right-0 top-0 bottom-0 w-8 bg-gradient-to-l from-gray-50 to-transparent dark:from-gray-900 pointer-events-none z-10 md:hidden"></div>
+      
+      {/* Scrollable container */}
+      <div className="overflow-x-auto pb-2 -mb-2 md:overflow-x-visible md:pb-0 md:mb-0">
+        <div className={`flex items-center space-x-2 p-1 rounded-lg min-w-fit md:min-w-0 ${
+          theme === 'gradient'
+            ? 'bg-gray-800/50'
+            : 'bg-gray-100 dark:bg-gray-800'
+        }`}>
+          {apps.map((app) => (
+            <button
+              key={app.id}
+              onClick={() => onAppChange(app.id)}
+              className={`
+                flex items-center space-x-2 px-3 py-2 rounded-md text-sm font-medium whitespace-nowrap
+                transition-all duration-200 relative
+                ${activeApp === app.id
+                  ? 'bg-white dark:bg-gray-700 shadow-sm text-gray-900 dark:text-white'
+                  : theme === 'gradient'
+                    ? 'text-gray-300 hover:text-white hover:bg-gray-700/50'
+                    : 'text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white hover:bg-gray-200 dark:hover:bg-gray-700'
+                }
+              `}
+            >
+              <span className="text-lg">{app.icon}</span>
+              <span>{app.name}</span>
+              {/* Completion status dot */}
+              <div className="relative">
+                <div className={`w-2 h-2 rounded-full ${getCompletionColor(app.id)} flex-shrink-0`}></div>
+                {/* Tooltip with percentage */}
+                <div className={`absolute bottom-full left-1/2 transform -translate-x-1/2 mb-2 px-2 py-1 text-xs rounded shadow-lg opacity-0 hover:opacity-100 transition-opacity duration-200 pointer-events-none z-10 whitespace-nowrap ${
+                  theme === 'gradient' 
+                    ? 'bg-gray-900 text-white border border-gray-700' 
+                    : 'bg-gray-900 text-white'
+                }`}>
+                  {getCompletionPercentage(app.id)}% complete
+                  <div className={`absolute top-full left-1/2 transform -translate-x-1/2 w-0 h-0 border-l-2 border-r-2 border-t-2 border-transparent ${
+                    theme === 'gradient' ? 'border-t-gray-900' : 'border-t-gray-900'
+                  }`}></div>
+                </div>
+              </div>
+            </button>
+          ))}
+        </div>
+      </div>
     </div>
   );
 };
