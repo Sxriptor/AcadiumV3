@@ -187,6 +187,11 @@ const Dashboard: React.FC = () => {
           gradient="from-yellow-500 to-orange-600"
         />
       </div>
+
+      {/* Bolt Button */}
+      <div className="flex justify-end">
+        <a id="bolt-button" href="https://bolt.new" target="_blank" title="Powered By Bolt"></a>
+      </div>
     </div>
   );
 };

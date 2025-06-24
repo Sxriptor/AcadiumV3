@@ -109,3 +109,23 @@ body {
 .button-ghost:hover {
   background-color: var(--hover-bg);
 }
+
+/* Bolt Button Styles */
+#bolt-button {
+  display: inline-block;
+  width: 40px;
+  height: 40px;
+  background-image: url("data:image/svg+xml,%3Csvg width='40' height='40' viewBox='0 0 40 40' fill='none' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M20 40C31.0457 40 40 31.0457 40 20C40 8.9543 31.0457 0 20 0C8.9543 0 0 8.9543 0 20C0 31.0457 8.9543 40 20 40Z' fill='%23000000'/%3E%3Cpath d='M28.5 20.5L17.5 29.5L18.5 20.5H11.5L22.5 11.5L21.5 20.5H28.5Z' fill='white'/%3E%3C/svg%3E");
+  background-size: contain;
+  background-repeat: no-repeat;
+  opacity: 0.7;
+  transition: opacity 0.2s ease-in-out;
+}
+
+#bolt-button:hover {
+  opacity: 1;
+}
+
+.dark #bolt-button {
+  background-image: url("data:image/svg+xml,%3Csvg width='40' height='40' viewBox='0 0 40 40' fill='none' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M20 40C31.0457 40 40 31.0457 40 20C40 8.9543 31.0457 0 20 0C8.9543 0 0 8.9543 0 20C0 31.0457 8.9543 40 20 40Z' fill='%23FFFFFF'/%3E%3Cpath d='M28.5 20.5L17.5 29.5L18.5 20.5H11.5L22.5 11.5L21.5 20.5H28.5Z' fill='black'/%3E%3C/svg%3E");
+}
