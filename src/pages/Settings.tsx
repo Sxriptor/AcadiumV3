@@ -63,18 +63,18 @@ const Settings: React.FC = () => {
     <div className="h-[calc(100vh-64px)] flex flex-col pt-6">
       {/* Tabs */}
       <div className="px-6">
-        <Card className="p-2 overflow-hidden">
-          <div className="flex overflow-x-auto hide-scrollbar">
+        <Card className="p-2">
+          <div className="flex justify-between space-x-1">
             {tabs.map((tab) => (
               <button
                 key={tab.id}
-                className={`flex items-center justify-center px-4 py-2 text-sm font-medium rounded-lg transition-colors whitespace-nowrap min-w-fit ${
+                className={`flex-1 flex items-center justify-center px-4 py-2 text-sm font-medium rounded-lg transition-colors ${
                   activeTab === tab.id
                     ? 'bg-blue-50 dark:bg-blue-900/20 text-blue-600 dark:text-blue-400'
                     : theme === 'gradient'
                       ? 'text-white hover:bg-gray-700/50'
                       : 'text-gray-900 dark:text-white hover:bg-gray-100 dark:hover:bg-gray-800'
-                } mr-2 last:mr-0`}
+                }`}
                 onClick={() => setActiveTab(tab.id)}
               >
                 {React.cloneElement(tab.icon, {
