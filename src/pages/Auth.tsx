@@ -316,7 +316,8 @@ const Auth: React.FC = () => {
               type="button"
               onClick={handleGuestMode}
               disabled={guestLoading}
-              className="w-full bg-gray-100 hover:bg-gray-200 dark:bg-gray-800 text-black dark:text-gray-300 border border-gray-300 dark:border-gray-600 hover:border-gray-400 dark:hover:bg-gray-700 transition-all duration-200 flex items-center justify-center"
+              variant="ghost"
+              className="w-full bg-gray-100 hover:bg-gray-200 dark:bg-gray-800 !text-gray-900 dark:!text-gray-300 border border-gray-300 dark:border-gray-600 hover:border-gray-400 dark:hover:bg-gray-700 transition-all duration-200 flex items-center justify-center"
             >
               <UserCheck className="h-5 w-5 mr-2" />
               {guestLoading ? 'Starting Guest Mode...' : 'Try as Guest'}
