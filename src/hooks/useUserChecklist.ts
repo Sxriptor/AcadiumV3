@@ -1,5 +1,6 @@
 import { useState, useEffect, useCallback } from 'react';
 import { supabase } from '../lib/supabase';
+import { guestMode } from '../lib/guestMode';
 
 export interface ChecklistItem {
   id: string;
@@ -19,6 +20,19 @@ export const useUserChecklist = (toolId: string) => {
       setLoading(true);
       setError(null);
 
+      // Check if in guest mode
+      if (guestMode.isGuestMode()) {
+        const checklistItems = guestMode.getGuestChecklist();
+        const completedItemIds = new Set(
+          checklistItems
+            .filter(item => item.tool_id === toolId && item.completed)
+            .map(item => item.checklist_item_id)
+        );
+        setCompletedItems(completedItemIds);
+        return;
+      }
+
+      // Regular Supabase flow
       const { data: { user } } = await supabase.auth.getUser();
       if (!user) {
         throw new Error('User not authenticated');
@@ -47,6 +61,25 @@ export const useUserChecklist = (toolId: string) => {
   // Update checklist item status
   const updateChecklistItem = useCallback(async (itemId: string, completed: boolean) => {
     try {
+      // Check if in guest mode
+      if (guestMode.isGuestMode()) {
+        guestMode.updateChecklistItem(toolId, itemId, completed);
+        setCompletedItems(prev => {
+          const newSet = new Set(prev);
+          if (completed) {
+            newSet.add(itemId);
+          } else {
+            newSet.delete(itemId);
+          }
+          return newSet;
+        });
+        window.dispatchEvent(new CustomEvent('userChecklistUpdated', { 
+          detail: { toolId, itemId, completed } 
+        }));
+        return true;
+      }
+
+      // Regular Supabase flow
       const { data: { user } } = await supabase.auth.getUser();
       if (!user) {
         throw new Error('User not authenticated');
