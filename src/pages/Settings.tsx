@@ -62,13 +62,13 @@ const Settings: React.FC = () => {
   return (
     <div className="h-[calc(100vh-64px)] flex flex-col pt-6">
       {/* Tabs */}
-      <div className="px-6">
+      <div className="px-6 overflow-hidden">
         <Card className="p-2">
-          <div className="flex justify-between space-x-1">
+          <div className="flex md:justify-between overflow-x-auto md:overflow-x-hidden no-scrollbar -mx-1 md:mx-0">
             {tabs.map((tab) => (
               <button
                 key={tab.id}
-                className={`flex-1 flex items-center justify-center px-4 py-2 text-sm font-medium rounded-lg transition-colors ${
+                className={`flex-none md:flex-1 flex items-center justify-center px-4 py-2 text-sm font-medium rounded-lg transition-colors whitespace-nowrap mx-1 md:mx-0 ${
                   activeTab === tab.id
                     ? 'bg-blue-50 dark:bg-blue-900/20 text-blue-600 dark:text-blue-400'
                     : theme === 'gradient'
