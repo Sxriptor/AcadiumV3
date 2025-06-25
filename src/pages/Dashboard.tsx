@@ -72,19 +72,19 @@ const Dashboard: React.FC = () => {
   ];
 
   return (
-    <div className="py-6 space-y-6">
+    <div className="py-3 sm:py-6 space-y-3 sm:space-y-6">
       {/* Success Message */}
       {showSuccessMessage && (
-        <div className={`rounded-lg p-4 border-l-4 border-green-500 ${
+        <div className={`rounded-lg p-2 sm:p-4 border-l-4 border-green-500 ${
           theme === 'gradient'
             ? 'bg-green-900/20 text-green-300'
             : 'bg-green-50 dark:bg-green-900/20 text-green-800 dark:text-green-300'
         }`}>
           <div className="flex items-center">
-            <CheckCircle className="h-5 w-5 mr-2" />
+            <CheckCircle className="h-4 w-4 sm:h-5 sm:w-5 mr-2" />
             <div>
-              <h3 className="font-medium">Payment Successful!</h3>
-              <p className="text-sm mt-1">Welcome to Acadium AI Premium. You now have access to all features.</p>
+              <h3 className="text-sm sm:text-base font-medium">Payment Successful!</h3>
+              <p className="text-xs sm:text-sm mt-0.5 sm:mt-1">Welcome to Acadium AI Premium. You now have access to all features.</p>
             </div>
           </div>
         </div>
@@ -94,13 +94,14 @@ const Dashboard: React.FC = () => {
       <WelcomeCard />
       
       {/* Stats Grid */}
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+      <div className="grid grid-cols-2 md:grid-cols-2 lg:grid-cols-4 gap-2 sm:gap-6">
         <StatCard
           title="Learning Streak"
           value="12 days"
           icon={<Clock className="h-6 w-6" />}
           trend={{ value: 8, isPositive: true }}
           description="Keep it up!"
+          className="mobile-optimized"
         />
         
         <StatCard
@@ -109,6 +110,7 @@ const Dashboard: React.FC = () => {
           icon={<BookOpen className="h-6 w-6" />}
           trend={{ value: 15, isPositive: true }}
           description="This month"
+          className="mobile-optimized"
         />
         
         <StatCard
@@ -117,6 +119,7 @@ const Dashboard: React.FC = () => {
           icon={<Bot className="h-6 w-6" />}
           trend={{ value: 12, isPositive: true }}
           description="Total unlocked"
+          className="mobile-optimized"
         />
         
         <StatCard
@@ -125,13 +128,14 @@ const Dashboard: React.FC = () => {
           icon={<TrendingUp className="h-6 w-6" />}
           trend={{ value: 23, isPositive: true }}
           description="From AI projects"
+          className="mobile-optimized"
         />
       </div>
 
       {/* Main Content Grid */}
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+      <div className="grid grid-cols-1 lg:grid-cols-3 gap-2 sm:gap-6">
         {/* Feature Cards */}
-        <div className="lg:col-span-2 grid grid-cols-1 md:grid-cols-2 gap-6">
+        <div className="lg:col-span-2 grid grid-cols-1 sm:grid-cols-2 gap-2 sm:gap-6">
           <FeatureCard
             icon={<Code className="h-6 w-6" />}
             title="Build AI Tools"
@@ -172,7 +176,7 @@ const Dashboard: React.FC = () => {
       </div>
 
       {/* Network Section */}
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+      <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 sm:gap-6">
         <FeatureCard
           icon={<Users className="h-6 w-6" />}
           title="Join the Community"
