@@ -57,7 +57,6 @@ interface NavItemProps {
 }
 
 const NavItem: React.FC<NavItemProps> = ({ to, icon, label, collapsed, subItems, external }) => {
-  const [isExpanded, setIsExpanded] = useState(false);
   const { theme } = useTheme();
   const location = useLocation();
 
@@ -67,7 +66,7 @@ const NavItem: React.FC<NavItemProps> = ({ to, icon, label, collapsed, subItems,
 
   if (external) {
     return (
-      <div className="relative">
+      <div>
         <a
           href={to}
           target="_blank"
@@ -80,8 +79,6 @@ const NavItem: React.FC<NavItemProps> = ({ to, icon, label, collapsed, subItems,
             }
             ${collapsed ? 'justify-center' : 'justify-between'}
           `}
-          onMouseEnter={() => setIsExpanded(true)}
-          onMouseLeave={() => setIsExpanded(false)}
         >
           <div className="flex items-center">
             <span className="text-lg">{icon}</span>
@@ -94,7 +91,7 @@ const NavItem: React.FC<NavItemProps> = ({ to, icon, label, collapsed, subItems,
   }
 
   return (
-    <div className="relative">
+    <div>
       <NavLink
         to={to}
         className={({ isActive }) => `
@@ -107,55 +104,12 @@ const NavItem: React.FC<NavItemProps> = ({ to, icon, label, collapsed, subItems,
           }
           ${collapsed ? 'justify-center' : 'justify-between'}
         `}
-        onMouseEnter={() => setIsExpanded(true)}
-        onMouseLeave={() => setIsExpanded(false)}
       >
         <div className="flex items-center">
           <span className="text-lg">{icon}</span>
           {!collapsed && <span className="ml-3 whitespace-nowrap">{label}</span>}
         </div>
-        {!collapsed && subItems && (
-          <ChevronRight className={`h-4 w-4 transition-transform duration-200 ${isExpanded ? 'rotate-90' : ''}`} />
-        )}
       </NavLink>
-
-      {/* Submenu */}
-      {subItems && isExpanded && (
-        <div 
-          className={`
-            absolute top-0 left-full
-            ${theme === 'gradient' 
-              ? 'bg-gray-800/90 border-gray-600' 
-              : 'bg-white dark:bg-gray-900 border-gray-200 dark:border-gray-700'
-            }
-            rounded-lg shadow-lg border
-            py-2 min-w-[200px]
-            ${collapsed ? 'ml-2' : 'ml-4'}
-          `}
-          onMouseEnter={() => setIsExpanded(true)}
-          onMouseLeave={() => setIsExpanded(false)}
-        >
-          {subItems.map((item, index) => (
-            <NavLink
-              key={index}
-              to={item.to}
-              className={({ isActive }) => `
-                flex items-center px-4 py-2
-                text-sm transition-colors duration-200
-                ${isActive 
-                  ? 'bg-blue-600/10 dark:bg-blue-900/30 text-blue-600 dark:text-blue-400' 
-                  : theme === 'gradient'
-                    ? 'text-gray-200 hover:bg-gray-700/50'
-                    : 'text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800/50'
-                }
-              `}
-            >
-              <span className="text-lg mr-3">{item.icon}</span>
-              <span>{item.label}</span>
-            </NavLink>
-          ))}
-        </div>
-      )}
     </div>
   );
 };
