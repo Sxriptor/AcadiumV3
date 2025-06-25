@@ -1,5 +1,6 @@
 import { useState, useEffect, useCallback } from 'react';
 import { supabase } from '../lib/supabase';
+import { guestMode } from '../lib/guestMode';
 
 export interface RecentPage {
   id: string;
@@ -16,6 +17,26 @@ export const useRecentPages = () => {
 
   const fetchRecentPages = useCallback(async () => {
     try {
+      // Handle guest mode
+      if (guestMode.isGuestMode()) {
+        const guestRecentPages = guestMode.getGuestRecentPages();
+        // Convert guest recent pages to match the interface and limit to 5
+        const formattedRecentPages: RecentPage[] = guestRecentPages
+          .slice(0, 5)
+          .map(page => ({
+            id: page.id,
+            page_path: page.page_path,
+            page_title: page.page_title,
+            page_icon: page.page_icon,
+            last_visited: page.last_visited,
+            visit_count: page.visit_count
+          }));
+        setRecentPages(formattedRecentPages);
+        setLoading(false);
+        return;
+      }
+
+      // Handle regular users
       const { data: { user } } = await supabase.auth.getUser();
       if (!user) return;
 
@@ -37,6 +58,19 @@ export const useRecentPages = () => {
 
   const addToRecent = useCallback(async (path: string, title: string, icon: string) => {
     try {
+      // Handle guest mode
+      if (guestMode.isGuestMode()) {
+        guestMode.addToRecentPages(path, title, icon);
+        
+        // Immediately refresh the data to update the sidebar
+        await fetchRecentPages();
+        
+        // Trigger a custom event to notify other components
+        window.dispatchEvent(new CustomEvent('recentPagesUpdated'));
+        return;
+      }
+
+      // Handle regular users
       const { data: { user } } = await supabase.auth.getUser();
       if (!user) return;
 
@@ -90,6 +124,19 @@ export const useRecentPages = () => {
 
   const clearAllRecent = useCallback(async () => {
     try {
+      // Handle guest mode
+      if (guestMode.isGuestMode()) {
+        guestMode.clearAllRecentPages();
+        
+        // Immediately refresh the data to update the sidebar
+        await fetchRecentPages();
+        
+        // Trigger a custom event to notify other components
+        window.dispatchEvent(new CustomEvent('recentPagesUpdated'));
+        return true;
+      }
+
+      // Handle regular users
       const { data: { user } } = await supabase.auth.getUser();
       if (!user) return false;
 
