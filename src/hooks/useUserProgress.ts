@@ -1,5 +1,6 @@
 import { useState, useEffect, useCallback } from 'react';
 import { supabase } from '../lib/supabase';
+import { guestMode } from '../lib/guestMode';
 
 export interface UserProgress {
   id: string;
@@ -21,6 +22,20 @@ export const useUserProgress = (toolId: string) => {
       setLoading(true);
       setError(null);
 
+      // Check if in guest mode
+      if (guestMode.isGuestMode()) {
+        const progress = guestMode.getGuestProgress();
+        const toolProgress = progress[toolId] || {};
+        const completedStepIds = new Set(
+          Object.entries(toolProgress)
+            .filter(([_, stepData]) => stepData.completed)
+            .map(([stepId, _]) => stepId)
+        );
+        setCompletedSteps(completedStepIds);
+        return;
+      }
+
+      // Regular Supabase flow
       const { data: { user } } = await supabase.auth.getUser();
       if (!user) {
         throw new Error('User not authenticated');
@@ -49,6 +64,15 @@ export const useUserProgress = (toolId: string) => {
   // Mark a step as complete
   const markStepComplete = useCallback(async (stepId: string) => {
     try {
+      // Check if in guest mode
+      if (guestMode.isGuestMode()) {
+        guestMode.markStepComplete(toolId, stepId);
+        setCompletedSteps(prev => new Set([...prev, stepId]));
+        window.dispatchEvent(new CustomEvent('userProgressUpdated', { detail: { toolId, stepId, completed: true } }));
+        return true;
+      }
+
+      // Regular Supabase flow
       const { data: { user } } = await supabase.auth.getUser();
       if (!user) {
         throw new Error('User not authenticated');
@@ -84,6 +108,19 @@ export const useUserProgress = (toolId: string) => {
   // Mark a step as incomplete
   const markStepIncomplete = useCallback(async (stepId: string) => {
     try {
+      // Check if in guest mode
+      if (guestMode.isGuestMode()) {
+        guestMode.markStepIncomplete(toolId, stepId);
+        setCompletedSteps(prev => {
+          const newSet = new Set(prev);
+          newSet.delete(stepId);
+          return newSet;
+        });
+        window.dispatchEvent(new CustomEvent('userProgressUpdated', { detail: { toolId, stepId, completed: false } }));
+        return true;
+      }
+
+      // Regular Supabase flow
       const { data: { user } } = await supabase.auth.getUser();
       if (!user) {
         throw new Error('User not authenticated');
@@ -119,6 +156,14 @@ export const useUserProgress = (toolId: string) => {
   // Add notes to a step
   const addStepNotes = useCallback(async (stepId: string, notes: string) => {
     try {
+      // Check if in guest mode
+      if (guestMode.isGuestMode()) {
+        // Guest mode doesn't support notes in the current implementation
+        // but we could extend the guest storage to support it
+        return true;
+      }
+
+      // Regular Supabase flow
       const { data: { user } } = await supabase.auth.getUser();
       if (!user) {
         throw new Error('User not authenticated');
