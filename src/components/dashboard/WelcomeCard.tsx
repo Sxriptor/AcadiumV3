@@ -48,7 +48,6 @@ export const WelcomeCard: React.FC = () => {
                 alt="Bolt" 
                 className="h-20 w-20" 
               />
-
             </div>
           </a>
         </div>
