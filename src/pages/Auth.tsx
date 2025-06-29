@@ -208,9 +208,7 @@ const Auth: React.FC = () => {
                 alt="Bolt" 
                 className="h-30 w-30" 
               />
-              <span className={`text-sm ${theme === 'dark' ? 'text-white' : 'text-black'}`}>
-                Built with Bolt
-              </span>
+
             </div>
           </a>
         </div>
