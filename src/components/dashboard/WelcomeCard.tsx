@@ -39,7 +39,7 @@ export const WelcomeCard: React.FC = () => {
           </Button>
         </div>
         
-  {/* Bolt badge */}
+          {/* Bolt badge */}
           <div className="absolute bottom-2 right-2">
             <a id="bolt-button" href="https://bolt.new" target="_blank" title="Powered By Bolt" className="opacity-60 hover:opacity-100 transition-opacity">
               <div className="flex items-center space-x-1">
