@@ -239,11 +239,9 @@ const Onboarding: React.FC = () => {
               <img 
                 src={theme === 'dark' ? '/white_circle_360x360.svg' : '/black_circle_360x360.svg'} 
                 alt="Bolt" 
-                className="h-10 w-10" 
+                className="h-20 w-20" 
               />
-              <span className={`text-sm ${theme === 'dark' ? 'text-white' : 'text-black'}`}>
-                Built with Bolt
-              </span>
+
             </div>
           </a>
         </div>
