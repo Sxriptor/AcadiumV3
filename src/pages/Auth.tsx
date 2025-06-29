@@ -200,7 +200,7 @@ const Auth: React.FC = () => {
         <FloatingThemeToggle />
         
         {/* Bolt badge - Top right for desktop */}
-        <div className="absolute top-10 right-10 hidden md:block">
+        <div className="absolute top-4 right-4 hidden md:block">
           <a id="bolt-button" href="https://bolt.new" target="_blank" title="Powered By Bolt" className="opacity-60 hover:opacity-100 transition-opacity">
             <div className="flex items-center space-x-1">
               <img 
@@ -208,7 +208,9 @@ const Auth: React.FC = () => {
                 alt="Bolt" 
                 className="h-30 w-30" 
               />
-
+              <span className={`text-sm ${theme === 'dark' ? 'text-white' : 'text-black'}`}>
+                Built with Bolt
+              </span>
             </div>
           </a>
         </div>
