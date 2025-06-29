@@ -201,11 +201,9 @@ const Dashboard: React.FC = () => {
             <img 
               src={theme === 'dark' || theme === 'gradient' ? '/white_circle_360x360.svg' : '/black_circle_360x360.svg'} 
               alt="Bolt" 
-              className="h-5 w-5" 
+className="h-20 w-20" 
             />
-            <span className={`text-xs ${theme === 'dark' || theme === 'gradient' ? 'text-white' : 'text-black'}`}>
-              Built with Bolt
-            </span>
+
           </div>
         </a>
       </div>
