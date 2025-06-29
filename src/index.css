@@ -120,3 +120,21 @@ body {
   -ms-overflow-style: none;  /* IE and Edge */
   scrollbar-width: none;  /* Firefox */
 }
+
+/* Bolt badge styles */
+#bolt-button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 12px;
+  transition: opacity 0.2s ease-in-out;
+}
+
+#bolt-button img {
+  margin-right: 4px;
+}
+
+.dark #bolt-button img,
+.gradient #bolt-button img {
+  filter: invert(1);
+}

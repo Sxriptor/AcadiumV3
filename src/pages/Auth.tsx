@@ -1,9 +1,9 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
-import { supabase, authCache, sessionManager, getCachedProfile } from '../lib/supabase';
-import { guestMode } from '../lib/guestMode';
 import { Card } from '../components/ui/Card';
 import { Button } from '../components/ui/Button';
+import { supabase } from '../lib/supabase';
+import { guestMode } from '../lib/guestMode';
 import { Mail, Lock, Circle, X, UserCheck } from 'lucide-react';
 import { FloatingThemeToggle } from '../components/ui/FloatingThemeToggle';
 import { useTheme } from '../components/ui/ThemeProvider';
@@ -81,14 +81,18 @@ const Auth: React.FC = () => {
         }
 
         // If no cached session, try to initialize from Supabase
-        const user = await sessionManager.initializeSession();
-        if (user) {
-          console.log('Found Supabase session, redirecting...');
-          navigate('/check-auth');
+        const { data: { session } } = await supabase.auth.getSession();
+        
+        if (session?.user) {
+          // Cache the user data
+          authCache.setUser(session.user);
           return;
         }
+        
+        return null;
       } catch (error) {
         console.error('Error checking existing session:', error);
+        return null;
       } finally {
         setInitializing(false);
       }
@@ -219,7 +223,7 @@ const Auth: React.FC = () => {
           <h2 className="text-xl font-bold text-gray-900 dark:text-white text-center mb-2">
             {isSignUp ? 'Create an Account' : 'Welcome Back'}
           </h2>
-          <p className="text-gray-600 dark:text-gray-400 text-center mb-8">
+          <p className="text-gray-600 dark:text-gray-300 text-center mb-8">
             {isSignUp 
               ? 'Sign up to start your journey'
               : 'Sign in to access your account'}
@@ -352,6 +356,22 @@ const Auth: React.FC = () => {
         </div>
       </Card>
         </main>
+        
+        {/* Bolt badge */}
+        <div className="flex justify-center pb-4">
+          <a id="bolt-button" href="https://bolt.new" target="_blank" title="Powered By Bolt" className="opacity-60 hover:opacity-100 transition-opacity">
+            <div className="flex items-center space-x-1">
+              <img 
+                src={theme === 'dark' ? '/white_circle_360x360.svg' : '/black_circle_360x360.svg'} 
+                alt="Bolt" 
+                className="h-5 w-5" 
+              />
+              <span className={`text-xs ${theme === 'dark' ? 'text-white' : 'text-black'}`}>
+                Built with Bolt
+              </span>
+            </div>
+          </a>
+        </div>
       </div>
     </div>
   );

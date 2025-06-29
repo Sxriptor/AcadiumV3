@@ -193,6 +193,22 @@ const Dashboard: React.FC = () => {
           gradient="from-yellow-500 to-orange-600"
         />
       </div>
+      
+      {/* Bolt badge */}
+      <div className="flex justify-center mt-4">
+        <a id="bolt-button" href="https://bolt.new" target="_blank" title="Powered By Bolt" className="opacity-60 hover:opacity-100 transition-opacity">
+          <div className="flex items-center space-x-1">
+            <img 
+              src={theme === 'dark' || theme === 'gradient' ? '/white_circle_360x360.svg' : '/black_circle_360x360.svg'} 
+              alt="Bolt" 
+              className="h-5 w-5" 
+            />
+            <span className={`text-xs ${theme === 'dark' || theme === 'gradient' ? 'text-white' : 'text-black'}`}>
+              Built with Bolt
+            </span>
+          </div>
+        </a>
+      </div>
     </div>
   );
 };

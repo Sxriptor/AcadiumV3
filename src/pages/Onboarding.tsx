@@ -238,6 +238,22 @@ const Onboarding: React.FC = () => {
             </div>
           </Card>
         </main>
+        
+        {/* Bolt badge */}
+        <div className="flex justify-center pb-4">
+          <a id="bolt-button" href="https://bolt.new" target="_blank" title="Powered By Bolt" className="opacity-60 hover:opacity-100 transition-opacity">
+            <div className="flex items-center space-x-1">
+              <img 
+                src={theme === 'dark' ? '/white_circle_360x360.svg' : '/black_circle_360x360.svg'} 
+                alt="Bolt" 
+                className="h-5 w-5" 
+              />
+              <span className={`text-xs ${theme === 'dark' ? 'text-white' : 'text-black'}`}>
+                Built with Bolt
+              </span>
+            </div>
+          </a>
+        </div>
       </div>
     </div>
   );

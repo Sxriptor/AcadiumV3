@@ -38,7 +38,22 @@ export const WelcomeCard: React.FC = () => {
             Watch Introduction <ArrowRight className="ml-1 h-3 w-3 sm:h-4 sm:w-4" />
           </Button>
         </div>
+        
+  {/* Bolt badge */}
+          <div className="absolute bottom-2 right-2">
+            <a id="bolt-button" href="https://bolt.new" target="_blank" title="Powered By Bolt" className="opacity-60 hover:opacity-100 transition-opacity">
+              <div className="flex items-center space-x-1">
+                <img 
+                  src="/white_circle_360x360.svg" 
+                  alt="Bolt" 
+                  className="h-4 w-4" 
+                />
+                <span className="text-xs text-white">
+                  Built with Bolt
+                </span>
+              </div>
+            </a>
+          </div>
+        </div>
       </div>
-    </Card>
-  );
 };
