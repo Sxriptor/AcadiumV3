@@ -56,5 +56,5 @@ export const WelcomeCard: React.FC = () => {
           </div>
         </div>
       </div>
-    );
+    
 };
