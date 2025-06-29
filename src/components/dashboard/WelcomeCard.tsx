@@ -48,9 +48,7 @@ export const WelcomeCard: React.FC = () => {
                 alt="Bolt" 
                 className="h-20 w-20" 
               />
-              <span className="text-xs text-white">
-                Built with Bolt
-              </span>
+
             </div>
           </a>
         </div>
