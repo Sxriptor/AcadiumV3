@@ -145,7 +145,7 @@ const AdvancedIndex: React.FC = () => {
   ];
 
   return (
-    <div className="space-y-8 py-6">
+    <div className="relative space-y-8 py-6">
       {/* Hero Section */}
       <div className="relative overflow-hidden rounded-2xl bg-gradient-to-br from-gray-800 to-gray-900 p-8 md:p-12">
         <div className="absolute top-0 right-0 w-96 h-96 bg-white/5 rounded-full -mt-20 -mr-20 blur-3xl"></div>
@@ -392,23 +392,7 @@ const AdvancedIndex: React.FC = () => {
           </div>
         </div>
       </Card>
-          {/* Bolt badge */}
-          <div className="absolute bottom-2 right-2">
-            <a id="bolt-button" href="https://bolt.new" target="_blank" title="Powered By Bolt" className="opacity-60 hover:opacity-100 transition-opacity">
-              <div className="flex items-center space-x-1">
-                <img 
-                  src="/white_circle_360x360.svg" 
-                  alt="Bolt" 
-className="h-20 w-20" 
-                />
 
-              </div>
-            </a>
-          </div>
-        </div>
-      </div>
-
-      
       {/* CTA Section */}
       <Card className="bg-gradient-to-br from-gray-800 to-gray-900 border-none text-white">
         <div className="text-center">
@@ -423,6 +407,26 @@ className="h-20 w-20"
           </Button>
         </div>
       </Card>
+
+      {/* Bolt badge */}
+      <div className="fixed bottom-4 right-4 z-50">
+        <a 
+          id="bolt-button" 
+          href="https://bolt.new" 
+          target="_blank" 
+          rel="noopener noreferrer"
+          title="Powered By Bolt" 
+          className="opacity-60 hover:opacity-100 transition-opacity"
+        >
+          <div className="flex items-center space-x-1">
+            <img 
+              src="/white_circle_360x360.svg" 
+              alt="Bolt" 
+              className="h-12 w-12" 
+            />
+          </div>
+        </a>
+      </div>
     </div>
   );
 };
