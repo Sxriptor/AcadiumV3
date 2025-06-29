@@ -392,7 +392,23 @@ const AdvancedIndex: React.FC = () => {
           </div>
         </div>
       </Card>
+          {/* Bolt badge */}
+          <div className="absolute bottom-2 right-2">
+            <a id="bolt-button" href="https://bolt.new" target="_blank" title="Powered By Bolt" className="opacity-60 hover:opacity-100 transition-opacity">
+              <div className="flex items-center space-x-1">
+                <img 
+                  src="/white_circle_360x360.svg" 
+                  alt="Bolt" 
+className="h-20 w-20" 
+                />
 
+              </div>
+            </a>
+          </div>
+        </div>
+      </div>
+
+      
       {/* CTA Section */}
       <Card className="bg-gradient-to-br from-gray-800 to-gray-900 border-none text-white">
         <div className="text-center">
