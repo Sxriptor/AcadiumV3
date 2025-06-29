@@ -208,7 +208,6 @@ const Auth: React.FC = () => {
                 alt="Bolt" 
                 className="h-30 w-30" 
               />
-
             </div>
           </a>
         </div>
