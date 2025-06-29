@@ -231,6 +231,23 @@ const Onboarding: React.FC = () => {
       <div className="relative z-10 flex flex-col min-h-screen">
         <FloatingThemeToggle />
         <FloatingBackButton />
+        
+        {/* Bolt badge - Top right for desktop */}
+        <div className="absolute top-4 right-4 hidden md:block">
+          <a id="bolt-button" href="https://bolt.new" target="_blank" title="Powered By Bolt" className="opacity-60 hover:opacity-100 transition-opacity">
+            <div className="flex items-center space-x-1">
+              <img 
+                src={theme === 'dark' ? '/white_circle_360x360.svg' : '/black_circle_360x360.svg'} 
+                alt="Bolt" 
+                className="h-10 w-10" 
+              />
+              <span className={`text-sm ${theme === 'dark' ? 'text-white' : 'text-black'}`}>
+                Built with Bolt
+              </span>
+            </div>
+          </a>
+        </div>
+        
         <main className="flex-grow flex items-center justify-center p-4">
           <Card className="w-full max-w-lg bg-white/90 dark:bg-gray-900/90 backdrop-blur-sm">
             <div className="p-6">
@@ -239,14 +256,14 @@ const Onboarding: React.FC = () => {
           </Card>
         </main>
         
-        {/* Bolt badge */}
-        <div className="flex justify-center pb-4">
+        {/* Bolt badge - Bottom for mobile */}
+        <div className="flex justify-center pb-4 md:hidden">
           <a id="bolt-button" href="https://bolt.new" target="_blank" title="Powered By Bolt" className="opacity-60 hover:opacity-100 transition-opacity">
             <div className="flex items-center space-x-1">
               <img 
                 src={theme === 'dark' ? '/white_circle_360x360.svg' : '/black_circle_360x360.svg'} 
                 alt="Bolt" 
-                className="h-5 w-5" 
+                className="h-8 w-8" 
               />
               <span className={`text-xs ${theme === 'dark' ? 'text-white' : 'text-black'}`}>
                 Built with Bolt
