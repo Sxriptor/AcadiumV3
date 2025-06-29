@@ -206,7 +206,7 @@ const Auth: React.FC = () => {
               <img 
                 src={theme === 'dark' ? '/white_circle_360x360.svg' : '/black_circle_360x360.svg'} 
                 alt="Bolt" 
-                className="h-20 w-20" 
+                className="h-30 w-30" 
               />
 
             </div>
