@@ -406,18 +406,21 @@ const N8nIndex: React.FC = () => {
             </div>
           </div>
           
-        {/* Bolt badge */}
-        <div className="absolute bottom-2 right-2">
-          <a id="bolt-button" href="https://bolt.new" target="_blank" title="Powered By Bolt" className="opacity-60 hover:opacity-100 transition-opacity">
-            <div className="flex items-center space-x-1">
-              <img 
-                src="/white_circle_360x360.svg" 
-                alt="Bolt" 
-                className="h-20 w-20" 
-              />
-
-            </div>
-          </a>
+          {/* Bolt badge */}
+          <div className="absolute bottom-2 right-2">
+            <a id="bolt-button" href="https://bolt.new" target="_blank" title="Powered By Bolt" className="opacity-60 hover:opacity-100 transition-opacity">
+              <div className="flex items-center space-x-1">
+                <img 
+                  src="/white_circle_360x360.svg" 
+                  alt="Bolt" 
+                  className="h-4 w-4" 
+                />
+                <span className="text-xs text-white">
+                  Built with Bolt
+                </span>
+              </div>
+            </a>
+          </div>
         </div>
       </div>
 
