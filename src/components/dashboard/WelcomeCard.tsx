@@ -46,7 +46,7 @@ export const WelcomeCard: React.FC = () => {
               <img 
                 src="/white_circle_360x360.svg" 
                 alt="Bolt" 
-                className="h-20 w-20" 
+                className="h-30 w-30" 
               />
             </div>
           </a>
